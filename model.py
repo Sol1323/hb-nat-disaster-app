@@ -13,7 +13,77 @@ db = SQLAlchemy()
 #####################################################################
 # Model definitions
 
+class User(db.Model):
+    """User of natural disaster alerts system"""
 
+    __tablename__ = "users"
+
+    user_id = db.Column(db.Integer,
+                        autoincrement=True,
+                        primary_key=True)
+    email = db.Column(db.String(64), nullable=True)
+    password = db.Column(db.String(64), nullable=True)
+    name = db.Column(db.String(64), nullable=True)
+    residency_address = db.Column(db.String(450), nullable=True)
+    allergies = db.Column(db.String(250), nullable=True)
+    zipcode = db.Column(db.String(20), nullable=True)
+    medications = db.Column(db.String(250), nullable=True)
+    zipcode = db.Column(db.String(20), nullable=True)
+    phone = db.Column(db.String(64), nullable=True)
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<User user_id={self.user_id} name={self.name} email={self.email}>"
+
+
+class Contact(db.Model):
+    """Contact from user for alert system"""
+
+    __tablename__ = "contacs"
+
+    contact_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+    phone_id = db.Column(db.Integer,
+                         db.ForeignKey('phones.phone_id'))
+    user_id = db.Column(db.Integer,
+                         db.ForeignKey('users.user_id'))
+    name = db.Column(db.String(64), nullable=True)
+
+
+    # Define relationship to user
+    user = db.relationship("User",
+                           backref=db.backref("contacts"))
+
+    # Define relationship to phone
+    phones = db.relationship("Phone",
+                            backref=db.backref("contact"))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Contact contact_id={self.contact_id} name={self.name} user_id={self.user_id} phone_id={self.phone_id}>"
+
+
+class Phone(db.Model):
+    """Phone from contact for alert system"""
+
+    __tablename__ = "phones"
+
+    phone_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+    contact_id = db.Column(db.Integer,
+                         db.ForeignKey('contacs.contact_id'))
+    phone = db.Column(db.String(64), nullable=True)
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Phone phone_id={self.phone_id} phone={self.phone} contact_id={self.contact_id}>"
 
 
 

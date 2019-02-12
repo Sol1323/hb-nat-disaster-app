@@ -3,7 +3,7 @@
 from pprint import pformat
 import os
 
-import requests
+# import requests
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
@@ -19,7 +19,7 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 
 
 
-#TODO: Fix this to raise an error.
+# TODO: Fix this to raise an error.
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 app.jinja_env.undefined = StrictUndefined
 

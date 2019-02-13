@@ -75,15 +75,75 @@ class Phone(db.Model):
     phone_id = db.Column(db.Integer,
                          autoincrement=True,
                          primary_key=True)
-    contact_id = db.Column(db.Integer,
-                         db.ForeignKey('contacs.contact_id'))
+
     phone = db.Column(db.String(64), nullable=True)
+
+    # TODO: q2: Had to erase contact_id given an error of to many foreign keys. Y?
 
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return f"<Phone phone_id={self.phone_id} phone={self.phone} contact_id={self.contact_id}>"
+
+
+class Alert(db.Model):
+    """Alert contacts in alert system"""
+
+    __tablename__ = "alerts"
+
+    alert_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+    user_id = db.Column(db.Integer,
+                         db.ForeignKey('users.user_id'))
+    nat_type = db.Column(db.String(20),
+                         db.ForeignKey('natural_disasters.nat_type'))
+    message = db.Column(db.String(650), nullable=True)
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Alert alert_id={self.alert_id} nat_type={self.nat_type} message={self.message}>"
+
+
+class Natural_Disaster(db.Model):
+    """Natural Disaster in alert system"""
+
+    __tablename__ = "natural_disasters"
+
+    nat_type = db.Column(db.String(20),
+                         primary_key=True)
+    latitude = db.Column(db.String(250))
+    longitude = db.Column(db.String(250))
+    location = db.Column(db.String(250))
+    timestamp = db.Column(db.DateTime)
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Natural_Disaster nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
+
+
+class Earthquake(db.Model):
+    """Earthquake in alert system"""
+
+    __tablename__ = "earthquakes"
+
+    earthquake_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+    magnitude = db.Column(db.Integer)
+    nat_type = db.Column(db.String(20),
+                         db.ForeignKey('natural_disasters.nat_type'))
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Earthquake earthquake_id={self.earthquake_id} magnitude={self.magnitude} nat_type={self.nat_type}>"
 
 
 
@@ -107,4 +167,5 @@ if __name__ == "__main__":
 
     from server import app
     connect_to_db(app)
+    db.create_all()
     print("Connected to DB.")

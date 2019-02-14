@@ -59,7 +59,7 @@ class Contact(db.Model):
 
     # Define relationship to phone
     phones = db.relationship("Phone",
-                            backref=db.backref("contact"))
+                            backref=db.backref("contact"))  # type: Phone[]
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -78,13 +78,10 @@ class Phone(db.Model):
 
     phone = db.Column(db.String(64), nullable=True)
 
-    # TODO: q2: Had to erase contact_id given an error of to many foreign keys. Y?
-
-
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Phone phone_id={self.phone_id} phone={self.phone} contact_id={self.contact_id}>"
+        return f"<Phone phone_id={self.phone_id} phone={self.phone}>"
 
 
 class Alert(db.Model):
@@ -97,15 +94,30 @@ class Alert(db.Model):
                          primary_key=True)
     user_id = db.Column(db.Integer,
                          db.ForeignKey('users.user_id'))
-    nat_type = db.Column(db.String(20),
-                         db.ForeignKey('natural_disasters.nat_type'))
+    nat_id = db.Column(db.Integer,
+                         db.ForeignKey('natural_disasters.nat_id'))
     message = db.Column(db.String(650), nullable=True)
+
+    #Define relationship to natural disaster
+    natural_disaster = db.relationship("Natural_Disaster",
+                                        uselist=False)
+
+    #Define relationship to users
+    users = db.relationship("User",
+                           backref=db.backref("alert"))
+
+    #TODO: Draft of init method. Watch how to instantiate a message using instance attibutes.
+    # def __init__(self, user, nat):  # Alert(juan, natural_disaster_1)
+    #     self.user = user
+    #     # etc
+    #
+    #     self.message = f"{user.medications}"
 
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Alert alert_id={self.alert_id} nat_type={self.nat_type} message={self.message}>"
+        return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
 
 class Natural_Disaster(db.Model):
@@ -113,18 +125,22 @@ class Natural_Disaster(db.Model):
 
     __tablename__ = "natural_disasters"
 
-    nat_type = db.Column(db.String(20),
+    nat_id = db.Column(db.Integer,
+                        autoincrement=True,
                          primary_key=True)
+    nat_type = db.Column(db.String(20))
     latitude = db.Column(db.String(250))
     longitude = db.Column(db.String(250))
     location = db.Column(db.String(250))
     timestamp = db.Column(db.DateTime)
 
+    earthquake = db.relationship("Earthquake",
+                                    uselist=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Natural_Disaster nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
+        return f"<Natural_Disaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
 
 
 class Earthquake(db.Model):
@@ -132,18 +148,18 @@ class Earthquake(db.Model):
 
     __tablename__ = "earthquakes"
 
-    earthquake_id = db.Column(db.Integer,
-                         autoincrement=True,
+    nat_id = db.Column(db.Integer,
+                        db.ForeignKey("natural_disasters.nat_id"),
                          primary_key=True)
     magnitude = db.Column(db.Integer)
-    nat_type = db.Column(db.String(20),
-                         db.ForeignKey('natural_disasters.nat_type'))
 
+    natural_disaster = db.relationship("Natural_Disaster",
+                                        uselist=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Earthquake earthquake_id={self.earthquake_id} magnitude={self.magnitude} nat_type={self.nat_type}>"
+        return f"<Earthquake earthquake_id={self.earthquake_id} magnitude={self.magnitude}>"
 
 
 

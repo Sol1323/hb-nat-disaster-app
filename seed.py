@@ -13,10 +13,10 @@ user_juan = User(name="Juan", email="j@email.com", password="456",
 
 #CREATE PHONES
 home_jesus = Phone(phone="1234567")
-cel_jesus = Phone(phone="1234567")
+cel_jesus = Phone(phone="13445654")
 
-cel_nati = Phone(phone="1234567")
-home_nati = Phone(phone="1234567")
+cel_nati = Phone(phone="3453546")
+home_nati = Phone(phone="54657687")
 
 
 #CREATE CONTACTS
@@ -24,10 +24,8 @@ nati_contact = Contact(name="Nati")
 nati_contact.user = user_fabio
 nati_contact.phones.extend([cel_nati, home_nati])
 
-
 marco_contact = Contact(name="Marco")
 marco_contact.user = user_fabio
-# OR user_fabio.contacts.append(marco_contact)
 
 jesus_contact = Contact(name="Jesus")
 jesus_contact.user = user_juan
@@ -36,14 +34,14 @@ jesus_contact.phones.extend([cel_jesus, home_jesus])
 
 #CREATE NATURAL DISASTERS & ALERTS
 natural_disaster_1 = Natural_Disaster(nat_type="earthquake", latitude="37.676", longitude="122.509", location="4km WSW of Daly City, CA", timestamp="2019-02-12 15:08:40 (UTC)")
-alert_1 = Alert(users=user_juan,
-                natural_disaster=natural_disaster_1,
+alert_1 = Alert(natural_disaster=natural_disaster_1,
                 message="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA ******* User Location: Bombooflat, Andaman and Nicobar Islands 744107, India User Coordinates: 35.839°N 119.849°W - Medical Information: allergies=seafood, medication=lorazepan")
+alert_1.user = user_fabio
 
 natural_disaster_2 = Natural_Disaster(nat_type="earthquake", latitude="35.839", longitude="119.849", location="21km SSE of Kettleman City, CA", timestamp="2019-05-8 03:03:30 (UTC)")
-alert_2 = Alert(users=user_fabio,
-                natural_disaster=natural_disaster_2,
+alert_2 = Alert(natural_disaster=natural_disaster_2,
                 message="Earthquake- M 5.8 - 4km WSW of Daly City, CA ******** User Location: M 2.8 - 4km WSW of Daly City, CA - User Coordinates: 37.676°N 122.509°W - Medical Information: allergies=penicilina, medication=insulin")
+alert_2.user = user_juan
 
 
 #CREATE EARTHQUAKES

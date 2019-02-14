@@ -41,13 +41,11 @@ class User(db.Model):
 class Contact(db.Model):
     """Contact from user for alert system"""
 
-    __tablename__ = "contacs"
+    __tablename__ = "contacts"
 
     contact_id = db.Column(db.Integer,
                          autoincrement=True,
                          primary_key=True)
-    phone_id = db.Column(db.Integer,
-                         db.ForeignKey('phones.phone_id'))
     user_id = db.Column(db.Integer,
                          db.ForeignKey('users.user_id'))
     name = db.Column(db.String(64), nullable=True)
@@ -77,6 +75,8 @@ class Phone(db.Model):
                          primary_key=True)
 
     phone = db.Column(db.String(64), nullable=True)
+    contact_id = db.Column(db.Integer,
+                            db.ForeignKey("contacts.contact_id"))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -103,8 +103,8 @@ class Alert(db.Model):
                                         uselist=False)
 
     #Define relationship to users
-    users = db.relationship("User",
-                           backref=db.backref("alert"))
+    user = db.relationship("User",
+                            uselist=False)
 
     #TODO: Draft of init method. Watch how to instantiate a message using instance attibutes.
     # def __init__(self, user, nat):  # Alert(juan, natural_disaster_1)

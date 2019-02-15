@@ -30,6 +30,42 @@ def index():
 
     return render_template("index.html")
 
+@app.route('/signup', methods=['GET'])
+def register_form():
+    """Show form for user signup."""
+
+    return render_template("signup_form.html")
+
+
+@app.route('/signup', methods=['POST'])
+def register_process():
+    """Process registration."""
+
+    # Get form variables
+    email = request.form["email"]
+    password = request.form["password"]
+    name = request.form["name"]
+    phone = request.form["phone"]
+    zipcode = request.form["zipcode"]
+    medications = request.form["medications"]
+    allergies = request.form["allergies"]
+
+    new_user = User(email=email,
+                    password=password,
+                    name=name,
+                    phone=phone,
+                    zipcode=zipcode,
+                    medications=medications,
+                    allergies=allergies
+                    )
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash(f"User {name} added.")
+    return redirect("/")
+
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

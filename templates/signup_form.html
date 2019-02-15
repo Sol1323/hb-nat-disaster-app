@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>--SignUp--</h1>
+
+<form action="/signup" method="POST">
+
+  <div>
+    <label>
+      Email
+      <input type="email" name="email">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Password
+      <input type="password" name="password">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Name
+      <input type="text" name="name">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Phone
+      <input type="text" name="phone">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Residency Address
+      <input type="text" name="residency-address">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Zipcode
+      <input type="text" name="zipcode">
+    </label>
+  </div>
+
+  <h3>Emergency Info:</h3>
+  <div>
+    <label>
+      Medications:
+      <input type="text" name="medications">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Allergies:
+      <input type="text" name="allergies">
+    </label>
+  </div><br>
+
+  <div>
+    <input type="submit" value="SignUp">
+  </div>
+
+</form>
+
+{% endblock %}

@@ -29,6 +29,7 @@ class User(db.Model):
     allergies = db.Column(db.String(250), nullable=True)
     zipcode = db.Column(db.String(20), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
+    #TODO: erase this column later 
     zipcode = db.Column(db.String(20), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
 

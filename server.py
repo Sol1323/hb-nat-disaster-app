@@ -24,11 +24,13 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 app.jinja_env.undefined = StrictUndefined
 
+
 @app.route('/')
 def index():
     """Homepage."""
 
     return render_template("index.html")
+
 
 @app.route('/signup', methods=['GET'])
 def register_form():
@@ -69,11 +71,42 @@ def register_process():
     flash(f"User {name} added.")
     return redirect("/")
 
+
 @app.route('/login', methods=['GET'])
 def login_form():
     """Show login form."""
 
     return render_template("login_form.html")
+
+
+@app.route('/login', methods=['POST'])
+def login_process():
+    """Process login."""
+
+    # Get form variables
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash("Oops! Email or password wrong. Please retry again.")
+        return redirect("/login")
+
+    session["user_id"] = user.user_id
+
+    flash(f"{user.name} successfully logged in!")
+    return redirect(f"/")
+
+
+@app.route('/logout')
+def logout():
+    """Log out."""
+
+    del session["user_id"]
+    flash("Logged Out.")
+    return redirect("/")
+
 
 
 

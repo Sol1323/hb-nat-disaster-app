@@ -52,7 +52,6 @@ earthquake_2 = Earthquake(magnitude=5.8)
 earthquake_2.natural_disaster = natural_disaster_2
 
 
-#TODO: Erase when working. Please seed my database <3!
 if __name__ == "__main__":
     connect_to_db(app)
     db.create_all()

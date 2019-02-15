@@ -24,6 +24,11 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 app.jinja_env.undefined = StrictUndefined
 
+@app.route('/')
+def index():
+    """Homepage."""
+
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

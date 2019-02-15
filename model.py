@@ -24,6 +24,7 @@ class User(db.Model):
     email = db.Column(db.String(64), nullable=True)
     password = db.Column(db.String(64), nullable=True)
     name = db.Column(db.String(64), nullable=True)
+    age = db.Column(db.Integer, nullable=True)
     residency_address = db.Column(db.String(450), nullable=True)
     allergies = db.Column(db.String(250), nullable=True)
     zipcode = db.Column(db.String(20), nullable=True)

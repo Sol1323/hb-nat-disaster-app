@@ -45,7 +45,9 @@ def register_process():
     email = request.form["email"]
     password = request.form["password"]
     name = request.form["name"]
+    age = int(request.form["age"])
     phone = request.form["phone"]
+    residency_address=request.form["residency-address"]
     zipcode = request.form["zipcode"]
     medications = request.form["medications"]
     allergies = request.form["allergies"]
@@ -53,7 +55,9 @@ def register_process():
     new_user = User(email=email,
                     password=password,
                     name=name,
+                    age=age,
                     phone=phone,
+                    residency_address=residency_address,
                     zipcode=zipcode,
                     medications=medications,
                     allergies=allergies
@@ -64,6 +68,12 @@ def register_process():
 
     flash(f"User {name} added.")
     return redirect("/")
+
+@app.route('/login', methods=['GET'])
+def login_form():
+    """Show login form."""
+
+    return render_template("login_form.html")
 
 
 

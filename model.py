@@ -26,11 +26,9 @@ class User(db.Model):
     name = db.Column(db.String(64), nullable=True)
     age = db.Column(db.Integer, nullable=True)
     residency_address = db.Column(db.String(450), nullable=True)
+    zipcode = db.Column(db.String(20), nullable=True)
     allergies = db.Column(db.String(250), nullable=True)
-    zipcode = db.Column(db.String(20), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
-    #TODO: erase this column later
-    zipcode = db.Column(db.String(20), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
 
 
@@ -101,7 +99,7 @@ class Alert(db.Model):
     message = db.Column(db.String(650), nullable=True)
 
     #Define relationship to natural disaster
-    natural_disaster = db.relationship("Natural_Disaster",
+    natural_disaster = db.relationship("NaturalDisaster",
                                         uselist=False)
 
     #Define relationship to users
@@ -121,8 +119,8 @@ class Alert(db.Model):
 
         return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
-# TODO: change to NaturalDisaster
-class Natural_Disaster(db.Model):
+
+class NaturalDisaster(db.Model):
     """Natural Disaster in alert system"""
 
     __tablename__ = "natural_disasters"
@@ -142,7 +140,7 @@ class Natural_Disaster(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Natural_Disaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
+        return f"<NaturalDisaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
 
 
 class Earthquake(db.Model):
@@ -155,7 +153,7 @@ class Earthquake(db.Model):
                          primary_key=True)
     magnitude = db.Column(db.Integer)
 
-    natural_disaster = db.relationship("Natural_Disaster",
+    natural_disaster = db.relationship("NaturalDisaster",
                                         uselist=False)
 
     def __repr__(self):

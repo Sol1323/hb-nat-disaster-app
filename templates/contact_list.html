@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <h2>Contacts</h2>
+
+  <ul>
+    {% for contact in contacts %}
+      <li>
+      {{ contact.name }} ({{ contact.contact_id }})
+      {% for phone in contact.phones %}
+        <!-- TODO: create route for see one contact -->
+        <!-- <a href="/contact/{{ contact.contact_id }}"> -->
+        {{ phone.phone }}
+        <!-- </a> -->
+      </li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+
+{% endblock %}

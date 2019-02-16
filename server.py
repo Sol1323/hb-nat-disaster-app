@@ -11,9 +11,6 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import User, Contact, Phone, Alert, Natural_Disaster, Earthquake, connect_to_db, db
 
-#Uncomment later when model defined
-# from model import connect_to_db, db, User, Contact, Alert, Natural_Disaster
-
 
 app = Flask(__name__)
 
@@ -33,14 +30,14 @@ def index():
 
 
 @app.route('/signup', methods=['GET'])
-def register_form():
+def signup_form():
     """Show form for user signup."""
 
     return render_template("signup_form.html")
 
 
 @app.route('/signup', methods=['POST'])
-def register_process():
+def signup_process():
     """Process registration."""
 
     # Get form variables
@@ -122,6 +119,14 @@ def user_detail(user_id):
 
     user = User.query.get(user_id)
     return render_template("user.html", user=user)
+
+
+@app.route('/contacts', methods=['GET'])
+def contact_list():
+    """Show list of all contacts."""
+
+    contacts = Contact.query.all()
+    return render_template("contact_list.html", contacts=contacts)
 
 
 

@@ -29,7 +29,7 @@ class User(db.Model):
     allergies = db.Column(db.String(250), nullable=True)
     zipcode = db.Column(db.String(20), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
-    #TODO: erase this column later 
+    #TODO: erase this column later
     zipcode = db.Column(db.String(20), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
 
@@ -121,7 +121,7 @@ class Alert(db.Model):
 
         return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
-
+# TODO: change to NaturalDisaster
 class Natural_Disaster(db.Model):
     """Natural Disaster in alert system"""
 

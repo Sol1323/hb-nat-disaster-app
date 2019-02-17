@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h3>--Add your contacs:--</h3>
 
+<h3>Add a contact:</h3>
+
+<form class="contact-form" action="/contacts" method="POST">
   <div>
     <label>
       Name
@@ -15,5 +17,6 @@
       <input type="text" name="phone">
     </label>
   </div>
+</form>
 
 {% endblock %}

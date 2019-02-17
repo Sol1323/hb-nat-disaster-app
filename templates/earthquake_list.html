@@ -6,7 +6,8 @@
   <ul>
     {% for earthquake in earthquakes %}
       <li>
-        <b>Title: {{ earthquake.natural_disaster.title }} ID: ({{ earthquake.nat_id }})</b>
+        <b>Title: <a href="/earthquakes/{{ earthquake.nat_id }}"> {{ earthquake.natural_disaster.title }} </a></b>
+        <p>ID:({{ earthquake.nat_id }})</p>
         <p> Timestamp: {{ earthquake.natural_disaster.timestamp }} </p>
         <p> Location: {{ earthquake.natural_disaster.location }} </p>
       </li>

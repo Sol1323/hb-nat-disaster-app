@@ -145,6 +145,14 @@ def earthquake_list():
     return render_template("earthquake_list.html", earthquakes=earthquakes)
 
 
+@app.route("/earthquakes/<int:nat_id>")
+def earthquake_detail(nat_id):
+    """Show info about an earthquake."""
+
+    earthquake = Earthquake.query.get(nat_id)
+    return render_template("earthquake.html", earthquake=earthquake)
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension

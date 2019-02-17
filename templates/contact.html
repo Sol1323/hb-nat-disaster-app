@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ contact.name }} ({{ contact.contact_id }})</h1>
+
+<ul>
+  {% for phone in contact.phones %}
+
+    <li>phone: {{ phone.phone }}</li>
+    
+  {% endfor %}
+</ul>
+
+{% endblock %}

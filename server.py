@@ -129,6 +129,13 @@ def contact_list():
     return render_template("contact_list.html", contacts=contacts)
 
 
+@app.route("/contacts/<int:contact_id>")
+def contact_detail(contact_id):
+    """Show info about contact."""
+
+    contact = Contact.query.get(contact_id)
+    return render_template("contact.html", contact=contact)
+
 
 
 if __name__ == "__main__":

@@ -17,15 +17,14 @@
     <ul>
     {% for contact in user.contacts %}
 
-        <li><b>{{ contact.name }}</b></li>
+      <a href="/contact/{{ contact.contact_id }}"> {{ contact.name}} </a>
 
       {% for phone in contact.phones %}
-      <!-- TODO: create route for see one contact -->
-      <!-- <a href="/contact/{{ contact.contact_id }}"> -->
-      <!-- </a> -->
+
         <li>phone: {{ phone.phone }}</li>
 
       {% endfor %}
+
     {% endfor %}
     </ul>
 

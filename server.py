@@ -137,6 +137,13 @@ def contact_detail(contact_id):
     return render_template("contact.html", contact=contact)
 
 
+@app.route('/earthquakes', methods=['GET'])
+def earthquake_list():
+    """Show list of all earthquakes."""
+
+    earthquakes = Earthquake.query.all()
+    return render_template("earthquake_list.html", earthquakes=earthquakes)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

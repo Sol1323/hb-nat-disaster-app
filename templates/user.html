@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
+  <h1>Profile</h1>
+
   <h1>{{ user.name }} ({{ user.user_id }})</h1>
   <p>Email: {{ user.email }}</p>
   <p>Age: {{ user.age }}</p>
@@ -12,23 +14,20 @@
 
   {% if user.contacts %}
 
-    <h2>Contacts</h2>
+  <h2>Contacts</h2>
 
     <ul>
     {% for contact in user.contacts %}
-
       <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name}} </a>
-
       {% for phone in contact.phones %}
-
-        <li>phone: {{ phone.phone }}</li>
-
+        <li>{{ phone.type }}: {{ phone.phone }}</li>
       {% endfor %}
-
     {% endfor %}
     </ul>
 
   {% endif %}
 
+  <!-- TODO: Add a button to handle the form to add a contact  -->
+  <!-- TODO: Add a button to handle earthquake alerts form-->
 
 {% endblock %}

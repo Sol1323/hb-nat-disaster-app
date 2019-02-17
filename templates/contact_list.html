@@ -5,15 +5,10 @@
 
   <ul>
     {% for contact in contacts %}
-
         <a href="/contacts/{{ contact.contact_id }}">{{ contact.name }}</a> ({{ contact.contact_id }}) <br><br>
-
       {% for phone in contact.phones %}
-
-        <li> {{ phone.phone }} </li>
-
+        <li> {{ phone.type }}: {{ phone.phone }} </li>
       {% endfor %}
-
     {% endfor %}
   </ul>
 

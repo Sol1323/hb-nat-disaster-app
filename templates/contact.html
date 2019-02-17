@@ -5,9 +5,7 @@
 
 <ul>
   {% for phone in contact.phones %}
-
-    <li>phone: {{ phone.phone }}</li>
-    
+    <li>{{ phone.type }}: {{ phone.phone }}</li>
   {% endfor %}
 </ul>
 

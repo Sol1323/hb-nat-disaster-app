@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <h2>Earthquakes</h2>
+
+  <ul>
+    {% for earthquake in earthquakes %}
+      <li>
+        <b>Title: {{ earthquake.natural_disaster.title }} ID: ({{ earthquake.nat_id }})</b>
+        <p> Timestamp: {{ earthquake.natural_disaster.timestamp }} </p>
+        <p> Location: {{ earthquake.natural_disaster.location }} </p>
+      </li>
+    {% endfor %}
+  </ul>
+
+
+{% endblock %}

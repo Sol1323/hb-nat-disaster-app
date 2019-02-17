@@ -75,6 +75,7 @@ class Phone(db.Model):
                          primary_key=True)
 
     phone = db.Column(db.String(64), nullable=True)
+    type = db.Column(db.String(64), nullable=True)
     contact_id = db.Column(db.Integer,
                             db.ForeignKey("contacts.contact_id"))
 
@@ -129,6 +130,7 @@ class NaturalDisaster(db.Model):
                         autoincrement=True,
                          primary_key=True)
     nat_type = db.Column(db.String(20))
+    title = db.Column(db.String(350))
     latitude = db.Column(db.String(250))
     longitude = db.Column(db.String(250))
     location = db.Column(db.String(250))
@@ -159,7 +161,7 @@ class Earthquake(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Earthquake earthquake_id={self.earthquake_id} magnitude={self.magnitude}>"
+        return f"<Earthquake nat_id={self.nat_id} magnitude={self.magnitude}>"
 
 
 

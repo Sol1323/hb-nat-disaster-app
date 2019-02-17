@@ -17,7 +17,7 @@
     <ul>
     {% for contact in user.contacts %}
 
-      <a href="/contact/{{ contact.contact_id }}"> {{ contact.name}} </a>
+      <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name}} </a>
 
       {% for phone in contact.phones %}
 

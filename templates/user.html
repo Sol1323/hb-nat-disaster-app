@@ -10,6 +10,26 @@
   <p>Medications: {{ user.medications }}</p>
   <p>Phone: {{ user.phone }}</p>
 
+  {% if user.contacts %}
+
+    <h2>Contacts</h2>
+
+    <ul>
+    {% for contact in user.contacts %}
+
+        <li><b>{{ contact.name }}</b></li>
+
+      {% for phone in contact.phones %}
+      <!-- TODO: create route for see one contact -->
+      <!-- <a href="/contact/{{ contact.contact_id }}"> -->
+      <!-- </a> -->
+        <li>phone: {{ phone.phone }}</li>
+
+      {% endfor %}
+    {% endfor %}
+    </ul>
+
   {% endif %}
+
 
 {% endblock %}

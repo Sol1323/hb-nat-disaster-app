@@ -93,7 +93,7 @@ def login_process():
     session["user_id"] = user.user_id
 
     flash(f"{user.name} successfully logged in!")
-    return redirect(f"/")
+    return redirect(f"/users/{user.user_id}")
 
 
 @app.route('/logout')
@@ -127,6 +127,7 @@ def contact_list():
 
     contacts = Contact.query.all()
     return render_template("contact_list.html", contacts=contacts)
+
 
 
 

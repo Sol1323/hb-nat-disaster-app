@@ -62,7 +62,7 @@ class Contact(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Contact contact_id={self.contact_id} name={self.name} user_id={self.user_id} phone_id={self.phone_id}>"
+        return f"<Contact contact_id={self.contact_id} name={self.name} user_id={self.user_id}>"
 
 
 class Phone(db.Model):

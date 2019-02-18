@@ -125,7 +125,6 @@ def user_detail(user_id):
 def add_contact():
     """Add a contact into the database."""
 
-    print(f"\n\nRequest: POST {request.url}\n\n")
 
     # Get form variables
     name = request.form.get("name")
@@ -133,10 +132,11 @@ def add_contact():
     phone = request.form.get("phone")
 
     user_id = session.get("user_id")
-    # TODO: q1- add query to add Phone to contact 
+
     new_contact = Contact(name=name, user_id=user_id)
-    # new_contact.phones.append(phone)
-    # new_contact.phones.type = type
+    new_phone = Phone(phone=phone, type=type)
+
+    new_contact.phones.append(new_phone)
 
     db.session.add(new_contact)
     db.session.commit()

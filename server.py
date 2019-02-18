@@ -133,7 +133,7 @@ def add_contact():
     phone = request.form.get("phone")
 
     user_id = session.get("user_id")
-
+    # TODO: q1- add query to add Phone to contact 
     new_contact = Contact(name=name, user_id=user_id)
     # new_contact.phones.append(phone)
     # new_contact.phones.type = type

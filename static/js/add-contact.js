@@ -1,5 +1,6 @@
 "use strict";
 
+ // TODO: add way to refresh contact list in a user's profile and clear form
 $('.contact-form').on('submit', (evt) => {
   evt.preventDefault();
 

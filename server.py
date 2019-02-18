@@ -105,7 +105,7 @@ def logout():
     return redirect("/")
 
 
-@app.route("/users")
+@app.route('/users')
 def user_list():
     """Show list of users."""
 
@@ -113,12 +113,36 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
-@app.route("/users/<int:user_id>")
+@app.route('/users/<int:user_id>')
 def user_detail(user_id):
     """Show info about user."""
 
     user = User.query.get(user_id)
     return render_template("user.html", user=user)
+
+
+@app.route('/add-contact', methods=['POST'])
+def add_contact():
+    """Add a contact into the database."""
+
+    print(f"\n\nRequest: POST {request.url}\n\n")
+
+    # Get form variables
+    name = request.form.get("name")
+    type = request.form.get("type")
+    phone = request.form.get("phone")
+
+    user_id = session.get("user_id")
+
+    new_contact = Contact(name=name, user_id=user_id)
+    # new_contact.phones.append(phone)
+    # new_contact.phones.type = type
+
+    db.session.add(new_contact)
+    db.session.commit()
+
+    flash(f"Contact {name} added.")
+    return "your contact has been added"
 
 
 @app.route('/contacts', methods=['GET'])
@@ -129,7 +153,7 @@ def contact_list():
     return render_template("contact_list.html", contacts=contacts)
 
 
-@app.route("/contacts/<int:contact_id>")
+@app.route('/contacts/<int:contact_id>')
 def contact_detail(contact_id):
     """Show info about contact."""
 
@@ -145,12 +169,13 @@ def earthquake_list():
     return render_template("earthquake_list.html", earthquakes=earthquakes)
 
 
-@app.route("/earthquakes/<int:nat_id>")
+@app.route('/earthquakes/<int:nat_id>')
 def earthquake_detail(nat_id):
     """Show info about an earthquake."""
 
     earthquake = Earthquake.query.get(nat_id)
     return render_template("earthquake.html", earthquake=earthquake)
+
 
 
 if __name__ == "__main__":

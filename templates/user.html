@@ -13,19 +13,47 @@
   <p>Phone: {{ user.phone }}</p>
 
   {% if user.contacts %}
-
   <h2>Contacts</h2>
 
     <ul>
     {% for contact in user.contacts %}
-      <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name}} </a>
+      <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name }} </a>
       {% for phone in contact.phones %}
         <li>{{ phone.type }}: {{ phone.phone }}</li>
       {% endfor %}
     {% endfor %}
     </ul>
-
   {% endif %}
+
+
+  <h3>Add a contact:</h3>
+
+  <form class="contact-form" action="/add-contact" method="POST">
+    <div>
+      <label>
+        Name
+        <input class="contact-name" type="text" name="name">
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Type
+        <input class="phone-type" type="text" name="type">
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Phone
+        <input class="contact-phone" type="text" name="phone">
+      </label>
+    </div>
+
+    <div>
+      <input type="submit" value="Add">
+    </div><br>
+  </form>
 
   <!-- TODO: Add a button to handle the form to add a contact  -->
   <!-- TODO: Add a button to handle earthquake alerts form-->

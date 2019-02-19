@@ -10,7 +10,7 @@ $('.contact-form').on('submit', (evt) => {
     'phone': $('.contact-phone').val()
   };
 
-  $.post('/add-contact', formInputs, (results) => {
+  $.post('/contacts', formInputs, (results) => {
     alert(results);
   });
 });

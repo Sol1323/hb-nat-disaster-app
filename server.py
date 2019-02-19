@@ -123,8 +123,15 @@ def user_detail(user_id):
 
 
 #----------------------------CONTACT ROUTES---------------------------------------
+@app.route('/contacts', methods=['GET'])
+def contact_list():
+    """Show list of all contacts."""
 
-@app.route('/add-contact', methods=['POST'])
+    contacts = Contact.query.all()
+    return render_template("contact_list.html", contacts=contacts)
+
+
+@app.route('/contacts', methods=['POST'])
 def add_contact():
     """Add a contact into the database."""
 
@@ -146,14 +153,6 @@ def add_contact():
 
     flash(f"Contact {name} added.")
     return "your contact has been added"
-
-
-@app.route('/contacts', methods=['GET'])
-def contact_list():
-    """Show list of all contacts."""
-
-    contacts = Contact.query.all()
-    return render_template("contact_list.html", contacts=contacts)
 
 
 @app.route('/contacts/<int:contact_id>')

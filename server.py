@@ -151,8 +151,10 @@ def add_contact():
     db.session.add(new_contact)
     db.session.commit()
 
+
     flash(f"Contact {name} added.")
-    return "your contact has been added"
+
+    return jsonify(new_contact.convert_to_dict())
 
 
 @app.route('/contacts/<int:contact_id>')
@@ -182,31 +184,33 @@ def earthquake_detail(nat_id):
 
 
 #----------------------------JSON ROUTES---------------------------------------
-@app.route("/api/users")
-def all_users():
-    """Return info about all users in JSON."""
+# @app.route("/api/users")
+# def all_users():
+#     """Return info about all users in JSON."""
+#
+#     all_users_dict = []
+#     users = User.query.all()
+#
+#     for user in users:
+#         user_dict = {}
+#         user_dict["user_id"] = user.user_id
+#         user_dict["email"] = user.email
+#         user_dict["password"] = user.password
+#         user_dict["name"] = user.name
+#         user_dict["age"] = user.age
+#         user_dict["residency_address"] = user.residency_address
+#         user_dict["zipcode"] = user.zipcode
+#         user_dict["allergies"] = user.allergies
+#         user_dict["medications"] = user.medications
+#         user_dict["phone"] = user.phone
+#         user_dict["settings"] = user.settings
+#
+#         all_users_dict.append(user_dict)
+#
+#     return jsonify(*all_users_dict)
 
-    all_users_dict = {}
-    users = User.query.all()
 
-    for user in users:
-        user_dict = {}
-        user_dict["user_id"] = user.user_id
-        user_dict["email"] = user.email
-        user_dict["password"] = user.password
-        user_dict["name"] = user.name
-        user_dict["age"] = user.age
-        user_dict["residency_address"] = user.residency_address
-        user_dict["zipcode"] = user.zipcode
-        user_dict["allergies"] = user.allergies
-        user_dict["medications"] = user.medications
-        user_dict["phone"] = user.phone
-
-        all_users_dict[user.user_id] = user_dict
-
-    return jsonify(all_users_dict)
-
-
+#TODO: make a route to see all contacts
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

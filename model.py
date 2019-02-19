@@ -30,12 +30,31 @@ class User(db.Model):
     allergies = db.Column(db.String(250), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
+    settings = db.Column(db.String(250), nullable=True)
 
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return f"<User user_id={self.user_id} name={self.name} email={self.email}>"
+
+    def convert_to_dict(self):
+        """Convert user into a dictoniary"""
+
+        user_dict = {}
+        user_dict["user_id"] = self.user_id
+        user_dict["email"] = self.email
+        user_dict["password"] = self.password
+        user_dict["name"] = self.name
+        user_dict["age"] = self.age
+        user_dict["residency_address"] = self.residency_address
+        user_dict["zipcode"] = self.zipcode
+        user_dict["allergies"] = self.allergies
+        user_dict["medications"] = self.medications
+        user_dict["phone"] = self.phone
+        user_dict["settings"] = self.settings
+
+        return user_dict
 
 
 class Contact(db.Model):
@@ -63,6 +82,18 @@ class Contact(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<Contact contact_id={self.contact_id} name={self.name} user_id={self.user_id}>"
+
+    def convert_to_dict(self):
+        """Convert contact into a dictionary"""
+
+        contact_dict = {}
+        contact_dict["contact_id"] = self.contact_id
+        contact_dict["name"] = self.name
+        contact_dict["user"] = self.user.name
+        contact_dict["phone"] = self.phones[0].phone
+        contact_dict["type"] = self.phones[0].type
+
+        return contact_dict
 
 
 class Phone(db.Model):

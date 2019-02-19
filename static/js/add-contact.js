@@ -1,6 +1,6 @@
 "use strict";
 
- // TODO: add way to refresh contact list in a user's profile and clear form
+
 $('.contact-form').on('submit', (evt) => {
   evt.preventDefault();
 
@@ -10,7 +10,13 @@ $('.contact-form').on('submit', (evt) => {
     'phone': $('.contact-phone').val()
   };
 
-  $.post('/contacts', formInputs, (results) => {
-    alert(results);
+  $.post('/contacts', formInputs, (contact) => {
+    $('.user-contacts').append(`
+                              <a href="/contacts/${contact.contact_id}"> ${contact.name} </a>
+                              <li>${contact.type}: ${contact.phone}</li>`
+                              );
+    $('.contact-form').each(function(){
+      this.reset();
+    });
   });
 });

@@ -3,6 +3,15 @@
 
   <h1>Profile</h1>
 
+  <!-- TODO: Toggle form experiment -->
+  <!-- <button type="button" class="editUserFormButton">Edit</button>
+
+  <form class="user-edit-form">
+    <b>First Name:</b> <input type="text" name="firstName">
+    <b>Last Name: </b><input type="text" name="lastName">
+     <button type="button" id="submit">Submit</button>
+  </form> -->
+
   <h1>{{ user.name }} ({{ user.user_id }})</h1>
   <p>Email: {{ user.email }}</p>
   <p>Age: {{ user.age }}</p>
@@ -15,7 +24,7 @@
   {% if user.contacts %}
   <h2>Contacts</h2>
 
-    <ul>
+    <ul class="user-contacts">
     {% for contact in user.contacts %}
       <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name }} </a>
       {% for phone in contact.phones %}
@@ -55,9 +64,9 @@
     </div><br>
   </form>
 
-  <h3>Earthquake Alert Restrictions:</h3>
+  <h3>Earthquake Alert Settings:</h3>
 
-<!-- TODO: q2: how to save information when is just a setting spec -->
+<!-- TODO: Refactor model.py to store user's settings -->
   <form class="earthquake-form">
     <div>
       <label>

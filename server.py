@@ -1,12 +1,13 @@
 """Natural Disaster Alert App."""
 
 from pprint import pformat
+import json
 import os
 
-# import requests
+
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, connect_to_db, db
@@ -121,6 +122,8 @@ def user_detail(user_id):
     return render_template("user.html", user=user)
 
 
+#----------------------------CONTACT ROUTES---------------------------------------
+
 @app.route('/add-contact', methods=['POST'])
 def add_contact():
     """Add a contact into the database."""
@@ -161,6 +164,8 @@ def contact_detail(contact_id):
     return render_template("contact.html", contact=contact)
 
 
+#----------------------------EARTHQUAKE ROUTES---------------------------------------
+
 @app.route('/earthquakes', methods=['GET'])
 def earthquake_list():
     """Show list of all earthquakes."""
@@ -175,6 +180,32 @@ def earthquake_detail(nat_id):
 
     earthquake = Earthquake.query.get(nat_id)
     return render_template("earthquake.html", earthquake=earthquake)
+
+
+#----------------------------JSON ROUTES---------------------------------------
+@app.route("/api/users")
+def all_users():
+    """Return info about all users in JSON."""
+
+    all_users_dict = {}
+    users = User.query.all()
+
+    for user in users:
+        user_dict = {}
+        user_dict["user_id"] = user.user_id
+        user_dict["email"] = user.email
+        user_dict["password"] = user.password
+        user_dict["name"] = user.name
+        user_dict["age"] = user.age
+        user_dict["residency_address"] = user.residency_address
+        user_dict["zipcode"] = user.zipcode
+        user_dict["allergies"] = user.allergies
+        user_dict["medications"] = user.medications
+        user_dict["phone"] = user.phone
+
+        all_users_dict[user.user_id] = user_dict
+
+    return jsonify(all_users_dict)
 
 
 

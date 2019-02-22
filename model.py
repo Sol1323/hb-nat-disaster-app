@@ -30,7 +30,7 @@ class User(db.Model):
     allergies = db.Column(db.String(250), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
-    settings = db.Column(db.String(250), nullable=True)
+
 
 
     def __repr__(self):
@@ -52,7 +52,9 @@ class User(db.Model):
         user_dict["allergies"] = self.allergies
         user_dict["medications"] = self.medications
         user_dict["phone"] = self.phone
-        user_dict["settings"] = self.settings
+        #TODO: refactor according to relationship
+        #TODO: refactor input attribute inside of dictionary. More DRY.
+        # "user_settings" = self.user_settings
 
         return user_dict
 
@@ -90,8 +92,8 @@ class Contact(db.Model):
         contact_dict["contact_id"] = self.contact_id
         contact_dict["name"] = self.name
         contact_dict["user"] = self.user.name
-        contact_dict["phone"] = self.phones[0].phone
-        contact_dict["type"] = self.phones[0].type
+        contact_dict["phone"] = self.phones[-1].phone
+        contact_dict["type"] = self.phones[-1].type
 
         return contact_dict
 
@@ -114,6 +116,47 @@ class Phone(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<Phone phone_id={self.phone_id} phone={self.phone}>"
+
+
+class Setting(db.Model):
+    """Setting in alert system"""
+
+    __tablename__ = "settings"
+
+    setting_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+
+
+    nat_type_id = db.Column(db.Integer,
+                         db.ForeignKey('nat_types.nat_type_id'))
+
+    # #Define relationship to users
+    # user_settings = db.relationship("UserSetting")
+
+
+class UserSetting(db.Model):
+    """User setting in alert system"""
+
+    __tablename__ = "user_settings"
+
+    user_setting_id = db.Column(db.Integer,
+                         autoincrement=True,
+                         primary_key=True)
+    user_id = db.Column(db.Integer,
+                         db.ForeignKey('users.user_id'))
+    setting_id = db.Column(db.Integer,
+                         db.ForeignKey('settings.setting_id'))
+    user_setting = db.Column(db.String(250), nullable=True)
+
+    #Define relationship to user_settings
+    user = db.relationship("User",
+                            backref=db.backref("user_settings"))
+
+    #Define relationship to settings
+    setting = db.relationship("Setting",
+                                backref=db.backref("user_settings"))
+
 
 
 class Alert(db.Model):
@@ -152,6 +195,24 @@ class Alert(db.Model):
         return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
 
+class NatType(db.Model):
+    """Natural Disaster Type in alert system"""
+
+    __tablename__ = "nat_types"
+
+    nat_type_id = db.Column(db.Integer,
+                        autoincrement=True,
+                         primary_key=True)
+    nat_type = db.Column(db.String(250))
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<NatType nat_type_id={self.nat_type_id} nat_type={self.nat_type}>"
+
+
+
 class NaturalDisaster(db.Model):
     """Natural Disaster in alert system"""
 
@@ -160,7 +221,8 @@ class NaturalDisaster(db.Model):
     nat_id = db.Column(db.Integer,
                         autoincrement=True,
                          primary_key=True)
-    nat_type = db.Column(db.String(20))
+    nat_type_id = db.Column(db.Integer,
+                            db.ForeignKey("nat_types.nat_type_id"))
     title = db.Column(db.String(350))
     latitude = db.Column(db.String(250))
     longitude = db.Column(db.String(250))
@@ -170,10 +232,15 @@ class NaturalDisaster(db.Model):
     earthquake = db.relationship("Earthquake",
                                     uselist=False)
 
+    #Define relationship to natural disaster type
+    nat_type = db.relationship("NatType",
+                                backref=db.backref("natural_disasters"))
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<NaturalDisaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
+        return f"<NaturalDisaster nat_id={self.nat_id} location={self.location} timestamp={self.timestamp}>"
 
 
 class Earthquake(db.Model):

@@ -1,5 +1,11 @@
-.user-edit-form {
+.edit-form {
 
 display:none;
+
+}
+
+body {
+
+font-family:monospace;
 
 }

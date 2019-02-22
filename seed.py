@@ -1,4 +1,4 @@
-from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, connect_to_db, db
+from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, UserSetting, Setting, connect_to_db, db
 from server import app
 
 
@@ -9,6 +9,11 @@ user_fabio = User(name="Fabio", age=45, email="f@email.com", password="123",
 
 user_juan = User(name="Juan", age=26, email="j@email.com", password="456",
             phone="12345678", allergies="seafood", medications="lorazepan")
+
+#CREATE SETTINGS
+earthquake_setting = UserSetting(user_setting="4.5")
+user_fabio.user_settings.append(earthquake_setting)
+
 
 
 #CREATE PHONES
@@ -33,12 +38,12 @@ jesus_contact.phones.extend([cel_jesus, home_jesus])
 
 
 #CREATE NATURAL DISASTERS & ALERTS
-natural_disaster_1 = NaturalDisaster(nat_type="earthquake", title="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA", latitude="37.676", longitude="122.509", location="4km WSW of Daly City, CA", timestamp="2019-02-12 15:08:40 (UTC)")
+natural_disaster_1 = NaturalDisaster(title="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA", latitude="37.676", longitude="122.509", location="4km WSW of Daly City, CA", timestamp="2019-02-12 15:08:40 (UTC)")
 alert_1 = Alert(natural_disaster=natural_disaster_1,
                 message="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA ******* User Location: 4355 Cornova st. Andaman and Nicobar Islands 744107, India User Coordinates: 35.839°N 119.849°W - Medical Information: allergies=seafood, medication=lorazepan")
 alert_1.user = user_fabio
 
-natural_disaster_2 = NaturalDisaster(nat_type="earthquake", title="Earthquake- M 5.8 - 4km WSW of Daly City, CA", latitude="35.839", longitude="119.849", location="21km SSE of Kettleman City, CA", timestamp="2019-05-8 03:03:30 (UTC)")
+natural_disaster_2 = NaturalDisaster(title="Earthquake- M 5.8 - 4km WSW of Daly City, CA", latitude="35.839", longitude="119.849", location="21km SSE of Kettleman City, CA", timestamp="2019-05-8 03:03:30 (UTC)")
 alert_2 = Alert(natural_disaster=natural_disaster_2,
                 message="Earthquake- M 5.8 - 4km WSW of Daly City, CA ******** User Location: 310 Magnolia st. Daly City, CA - User Coordinates: 37.676°N 122.509°W - Medical Information: allergies=penicilina, medication=insulin")
 alert_2.user = user_juan

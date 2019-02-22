@@ -9,6 +9,7 @@
 {% if "user_id" in session %}
   <a href="/logout">Logout</a>
 {% else %}
+  <a href="/signup">SignUp</a>
   <a href="/login">Login</a>
 {% endif %}
 
@@ -23,6 +24,5 @@
 {% endblock %}
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="/static/js/main.js"></script>
-<script src="/static/js/add-contact.js"></script>
 </body>
 </html>

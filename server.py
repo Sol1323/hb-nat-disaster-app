@@ -18,7 +18,7 @@ app = Flask(__name__)
 #Get secret key for DebugToolbarExtension
 app.secret_key = os.environ.get('APP_SECRET_KEY')
 
-# TODO: Fix this to raise an error.
+# FIXME: Fix this to raise an error.
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 app.jinja_env.undefined = StrictUndefined
 
@@ -122,6 +122,39 @@ def user_detail(user_id):
     return render_template("user.html", user=user)
 
 
+@app.route('/users/<int:user_id>', methods=['POST'])
+def user_update(user_id):
+    """Update info about user."""
+
+    user = User.query.get(user_id)
+
+    # Get form variables
+    email = request.form["email"]
+    name = request.form["name"]
+    age = int(request.form["age"])
+    phone = request.form["phone"]
+    residency_address=request.form["residency_address"]
+    zipcode = request.form["zipcode"]
+    medications = request.form["medications"]
+    allergies = request.form["allergies"]
+
+    user.email = email
+    user.name = name
+    user.age = age
+    user.phone = phone
+    user.residency_address = residency_address
+    user.zipcode = zipcode
+    user.medications = medications
+    user.allergies = allergies
+
+    db.session.add(user)
+    db.session.commit()
+
+    flash(f"User {name} updated.")
+
+    return jsonify(user.convert_to_dict())
+
+
 #----------------------------CONTACT ROUTES---------------------------------------
 @app.route('/contacts', methods=['GET'])
 def contact_list():
@@ -165,8 +198,8 @@ def contact_detail(contact_id):
     return render_template("contact.html", contact=contact)
 
 
-#----------------------------EARTHQUAKE ROUTES---------------------------------------
 
+#----------------------------EARTHQUAKE ROUTES---------------------------------------
 @app.route('/earthquakes', methods=['GET'])
 def earthquake_list():
     """Show list of all earthquakes."""
@@ -183,34 +216,29 @@ def earthquake_detail(nat_id):
     return render_template("earthquake.html", earthquake=earthquake)
 
 
-#----------------------------JSON ROUTES---------------------------------------
-# @app.route("/api/users")
-# def all_users():
-#     """Return info about all users in JSON."""
-#
-#     all_users_dict = []
-#     users = User.query.all()
-#
-#     for user in users:
-#         user_dict = {}
-#         user_dict["user_id"] = user.user_id
-#         user_dict["email"] = user.email
-#         user_dict["password"] = user.password
-#         user_dict["name"] = user.name
-#         user_dict["age"] = user.age
-#         user_dict["residency_address"] = user.residency_address
-#         user_dict["zipcode"] = user.zipcode
-#         user_dict["allergies"] = user.allergies
-#         user_dict["medications"] = user.medications
-#         user_dict["phone"] = user.phone
-#         user_dict["settings"] = user.settings
-#
-#         all_users_dict.append(user_dict)
-#
-#     return jsonify(*all_users_dict)
+#----------------------------SETTINGS ROUTES---------------------------------------
+@app.route('/settings/<setting_code>', methods=['POST'])
+def update_setting(setting_code):
+    """Add a contact into the database."""
+
+    #TODO: Finish this route.
+    # Get form variables
+    # magnitude = request.form.get("magnitude")
+
+    #
+    # user_id = session.get("user_id")
+    #
+    # new_setting = UserSetting(user_value=magnitude, user_id=user_id)
+
+    # db.session.add(new_setting)
+    # db.session.commit()
 
 
-#TODO: make a route to see all contacts
+    # flash(f"Setting added.")
+    #
+    # return jsonify(new_setting.convert_to_dict())
+
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

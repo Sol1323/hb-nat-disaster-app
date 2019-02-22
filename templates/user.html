@@ -1,26 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <h1>Profile</h1>
-
-  <!-- TODO: Toggle form experiment -->
-  <!-- <button type="button" class="editUserFormButton">Edit</button>
-
-  <form class="user-edit-form">
-    <b>First Name:</b> <input type="text" name="firstName">
-    <b>Last Name: </b><input type="text" name="lastName">
-     <button type="button" id="submit">Submit</button>
-  </form> -->
-
   <h1>{{ user.name }} ({{ user.user_id }})</h1>
-  <p>Email: {{ user.email }}</p>
-  <p>Age: {{ user.age }}</p>
-  <p>Residency Address: {{ user.residency_address }}</p>
-  <p>Zipcode: {{ user.zipcode }}</p>
-  <p>Allergies: {{ user.allergies }}</p>
-  <p>Medications: {{ user.medications }}</p>
-  <p>Phone: {{ user.phone }}</p>
+  <p><b>Email:</b> {{ user.email }}</p>
+  <p><b>Age:</b> {{ user.age }}</p>
+  <p><b>Residency Address:</b> {{ user.residency_address }}</p>
+  <p><b>Zipcode:</b> {{ user.zipcode }}</p>
+  <p><b>Allergies:</b> {{ user.allergies }}</p>
+  <p><b>Medications:</b> {{ user.medications }}</p>
+  <p><b>Phone:</b> {{ user.phone }}</p>
 
+<!------------------------------ EDIT USER FORM  ---------------------------------->
+  <button type="button" class="editFormButton">Edit</button>
+  <form class="edit-form user-edit-form" action="/users/{{ user.user_id }}" method="POST">
+    <p><b>Name:</b></p>
+    <input class="user-name" type="text" value="{{ user.name }}" name="name">
+    <p><b>Email:</b></p>
+    <input class="user-email" type="text" value="{{ user.email }}" name="email">
+    <p><b>Age:</b></p>
+    <input class="user-age" type="text" value="{{ user.age }}" name="age">
+    <p><b>Residency Address:</b></p>
+    <input class="user-address" type="text" value="{{ user.residency_address }}" name="residency_address">
+    <p><b>Zipcode:</b></p>
+    <input class="user-zipcode" type="text" value="{{ user.zipcode }}" name="zipcode">
+    <p><b>Allergies:</b></p>
+    <input class="user-allergies" type="text" value="{{ user.allergies }}" name="allergies">
+    <p><b>Medications:</b></p>
+    <input class="user-medications" type="text" value="{{ user.medications }}" name="medications">
+    <p><b>Phone:</b></p>
+    <input class="user-phone" type="text" value="{{ user.phone }}" name="phone">
+    <input type="hidden" class="user-id" name="user-id" value="{{ user.user_id }}">
+    <input type="submit" id="submit" value="Save"></input>
+  </form>
+
+<!------------------------------ SHOW CONTACTS  ---------------------------------->
   {% if user.contacts %}
   <h2>Contacts</h2>
 
@@ -34,7 +47,7 @@
     </ul>
   {% endif %}
 
-
+<!------------------------------ ADD CONTACT FORM  ---------------------------------->
   <h3>Add a contact:</h3>
 
   <form class="contact-form" action="/contacts" method="POST">
@@ -64,10 +77,12 @@
     </div><br>
   </form>
 
+
+<!------------------------------ ADD EARTHQUAKE ALERT SETTING ---------------------------------->
   <h3>Earthquake Alert Settings:</h3>
 
 <!-- TODO: Refactor model.py to store user's settings -->
-  <form class="earthquake-form">
+  <form class="earthquake-form" action="/settings" method="POST">
     <div>
       <label>
         Magnitude

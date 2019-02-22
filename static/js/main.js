@@ -2,8 +2,12 @@
 
 
 // -------------------------EDIT BUTTON TOGGLE SCRIPT---------------------------
-$(".editFormButton").click(function(){
-        $(".edit-form").toggle();
+$(".editUserFormButton").click(function(){
+        $(".user-edit-form").toggle();
+});
+
+$(".editContactFormButton").click(function(){
+        $(".contact-edit-form").toggle();
 });
 
 
@@ -46,7 +50,7 @@ $('.user-edit-form').on('submit', (evt) => {
     'medications': $('.user-medications').val(),
     'phone': $('.user-phone').val()
   };
-
+  // TODO: Add logic to show updated user's info withouth refreshing page
   $.post('/users/'+ user_id, formInputs, (contact) => {
     alert("this is working!!");
   });

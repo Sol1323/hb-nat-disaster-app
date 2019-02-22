@@ -145,8 +145,8 @@ def user_profile(user_id):
 
 #----------------------------CONTACT ROUTES---------------------------------------
 @app.route('/contacts', methods=['GET','POST'])
-def add_contact():
-    """Add a contact into the database."""
+def contact_list():
+    """Show all contacts and add a contact into the database."""
 
     contacts = Contact.query.all()
 
@@ -174,12 +174,28 @@ def add_contact():
     return jsonify(new_contact.convert_to_dict())
 
 
-@app.route('/contacts/<int:contact_id>')
-def contact_detail(contact_id):
-    """Show info about contact."""
+@app.route('/contacts/<int:contact_id>', methods=['GET','POST'])
+def contact_profile(contact_id):
+    """Show and update info about contact."""
 
     contact = Contact.query.get(contact_id)
-    return render_template("contact.html", contact=contact)
+
+    if request.method == 'GET':
+        return render_template("contact.html", contact=contact)
+
+    # Get form variables
+    name = request.form["name"]
+    phone = request.form["phone"]
+
+    contact.name = name
+    contact.phone = phone
+
+    db.session.add(contact)
+    db.session.commit()
+
+    flash(f"Contact {name} updated.")
+
+    return jsonify(contact.convert_to_dict())
 
 
 

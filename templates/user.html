@@ -11,7 +11,7 @@
   <p><b>Phone:</b> {{ user.phone }}</p>
 
 <!------------------------------ EDIT USER FORM  ---------------------------------->
-  <button type="button" class="editFormButton">Edit</button>
+  <button type="button" class="editUserFormButton">Edit</button>
   <form class="edit-form user-edit-form" action="/users/{{ user.user_id }}" method="POST">
     <p><b>Name:</b></p>
     <input class="user-name" type="text" value="{{ user.name }}" name="name">
@@ -42,10 +42,22 @@
       <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name }} </a>
       {% for phone in contact.phones %}
         <li>{{ phone.type }}: {{ phone.phone }}</li>
+        <!------------------------------ EDIT CONTACT FORM  ---------------------------------->
+          <button type="button" class="editContactFormButton">Edit</button>
+          <form class="edit-form contact-edit-form" action="/contacts/{{ contact.contact_id }}" method="POST">
+            <p><b>Name:</b></p>
+            <input class="contact-name" type="text" value="{{ contact.name }}" name="name">
+            <p><b>Phone:</b></p>
+            <input class="contact-phone" type="text" value="{{ phone.phone }}" name="phone">
+            <input type="hidden" class="contact-id" name="contact-id" value="{{ contact.contact_id }}">
+            <input type="submit" id="submit" value="Save"></input>
+          </form>
       {% endfor %}
     {% endfor %}
     </ul>
   {% endif %}
+
+
 
 <!------------------------------ ADD CONTACT FORM  ---------------------------------->
   <h3>Add a contact:</h3>

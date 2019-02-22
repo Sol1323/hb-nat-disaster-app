@@ -144,18 +144,14 @@ def user_profile(user_id):
 
 
 #----------------------------CONTACT ROUTES---------------------------------------
-@app.route('/contacts', methods=['GET'])
-def contact_list():
-    """Show list of all contacts."""
-
-    contacts = Contact.query.all()
-    return render_template("contact_list.html", contacts=contacts)
-
-
-@app.route('/contacts', methods=['POST'])
+@app.route('/contacts', methods=['GET','POST'])
 def add_contact():
     """Add a contact into the database."""
 
+    contacts = Contact.query.all()
+
+    if request.method == 'GET':
+        return render_template("contact_list.html", contacts=contacts)
 
     # Get form variables
     name = request.form.get("name")

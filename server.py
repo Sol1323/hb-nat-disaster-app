@@ -30,16 +30,12 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/signup', methods=['GET'])
-def signup_form():
-    """Show form for user signup."""
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    """User sign up."""
 
-    return render_template("signup_form.html")
-
-
-@app.route('/signup', methods=['POST'])
-def signup_process():
-    """Process registration."""
+    if request.method == 'GET':
+        return render_template("signup_form.html")
 
     # Get form variables
     email = request.form["email"]
@@ -70,16 +66,12 @@ def signup_process():
     return redirect("/")
 
 
-@app.route('/login', methods=['GET'])
-def login_form():
-    """Show login form."""
+@app.route('/login', methods=['GET','POST'])
+def login():
+    """Show & process login."""
 
-    return render_template("login_form.html")
-
-
-@app.route('/login', methods=['POST'])
-def login_process():
-    """Process login."""
+    if request.method == 'GET':
+        return render_template("login_form.html")
 
     # Get form variables
     email = request.form["email"]
@@ -114,19 +106,15 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
-@app.route('/users/<int:user_id>')
-def user_detail(user_id):
-    """Show info about user."""
+@app.route('/users/<int:user_id>', methods=['POST', 'GET'])
+def user_profile(user_id):
+    """Get and update info about user."""
 
     user = User.query.get(user_id)
-    return render_template("user.html", user=user)
 
+    if request.method == 'GET':
+        return render_template("user.html", user=user)
 
-@app.route('/users/<int:user_id>', methods=['POST'])
-def user_update(user_id):
-    """Update info about user."""
-
-    user = User.query.get(user_id)
 
     # Get form variables
     email = request.form["email"]

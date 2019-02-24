@@ -2,12 +2,14 @@
 
 
 // -------------------------EDIT BUTTON TOGGLE SCRIPT---------------------------
-$(".editUserFormButton").click(function(){
-        $(".user-edit-form").toggle();
+$("#edit-user-form-button").click(function(){
+        $("#user-edit-form").toggle();
 });
 
-$(".editContactFormButton").click(function(){
-        $(".contact-edit-form").toggle();
+
+$(".edit-contact-button").click(function(){
+  const id = $(this).attr("id");
+        $("#contact-edit-form-"+ id).toggle();
 });
 
 

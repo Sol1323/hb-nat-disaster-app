@@ -37,33 +37,34 @@ def signup():
     if request.method == 'GET':
         return render_template("signup_form.html")
 
+    elif request.method == 'POST':
     # Get form variables
-    email = request.form["email"]
-    password = request.form["password"]
-    name = request.form["name"]
-    age = int(request.form["age"])
-    phone = request.form["phone"]
-    residency_address=request.form["residency-address"]
-    zipcode = request.form["zipcode"]
-    medications = request.form["medications"]
-    allergies = request.form["allergies"]
+        email = request.form["email"]
+        password = request.form["password"]
+        name = request.form["name"]
+        age = int(request.form["age"])
+        phone = request.form["phone"]
+        residency_address=request.form["residency-address"]
+        zipcode = request.form["zipcode"]
+        medications = request.form["medications"]
+        allergies = request.form["allergies"]
 
-    new_user = User(email=email,
-                    password=password,
-                    name=name,
-                    age=age,
-                    phone=phone,
-                    residency_address=residency_address,
-                    zipcode=zipcode,
-                    medications=medications,
-                    allergies=allergies
-                    )
+        new_user = User(email=email,
+                        password=password,
+                        name=name,
+                        age=age,
+                        phone=phone,
+                        residency_address=residency_address,
+                        zipcode=zipcode,
+                        medications=medications,
+                        allergies=allergies
+                        )
 
-    db.session.add(new_user)
-    db.session.commit()
+        db.session.add(new_user)
+        db.session.commit()
 
-    flash(f"User {name} added.")
-    return redirect("/")
+        flash(f"User {name} added.")
+        return redirect("/")
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -73,20 +74,21 @@ def login():
     if request.method == 'GET':
         return render_template("login_form.html")
 
-    # Get form variables
-    email = request.form["email"]
-    password = request.form["password"]
+    elif request.method == 'POST':
+        # Get form variables
+        email = request.form["email"]
+        password = request.form["password"]
 
-    user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
 
-    if not user:
-        flash("Oops! Email or password wrong. Please retry again.")
-        return redirect("/login")
+        if not user:
+            flash("Oops! Email or password wrong. Please retry again.")
+            return redirect("/login")
 
-    session["user_id"] = user.user_id
+        session["user_id"] = user.user_id
 
-    flash(f"{user.name} successfully logged in!")
-    return redirect(f"/users/{user.user_id}")
+        flash(f"{user.name} successfully logged in!")
+        return redirect(f"/users/{user.user_id}")
 
 
 @app.route('/logout')
@@ -115,32 +117,32 @@ def user_profile(user_id):
     if request.method == 'GET':
         return render_template("user.html", user=user)
 
+    elif request.method == 'POST':
+        # Get form variables
+        email = request.form["email"]
+        name = request.form["name"]
+        age = int(request.form["age"])
+        phone = request.form["phone"]
+        residency_address=request.form["residency_address"]
+        zipcode = request.form["zipcode"]
+        medications = request.form["medications"]
+        allergies = request.form["allergies"]
 
-    # Get form variables
-    email = request.form["email"]
-    name = request.form["name"]
-    age = int(request.form["age"])
-    phone = request.form["phone"]
-    residency_address=request.form["residency_address"]
-    zipcode = request.form["zipcode"]
-    medications = request.form["medications"]
-    allergies = request.form["allergies"]
+        user.email = email
+        user.name = name
+        user.age = age
+        user.phone = phone
+        user.residency_address = residency_address
+        user.zipcode = zipcode
+        user.medications = medications
+        user.allergies = allergies
 
-    user.email = email
-    user.name = name
-    user.age = age
-    user.phone = phone
-    user.residency_address = residency_address
-    user.zipcode = zipcode
-    user.medications = medications
-    user.allergies = allergies
+        db.session.add(user)
+        db.session.commit()
 
-    db.session.add(user)
-    db.session.commit()
+        flash(f"User {name} updated.")
 
-    flash(f"User {name} updated.")
-
-    return jsonify(user.convert_to_dict())
+        return jsonify(user.convert_to_dict())
 
 
 #----------------------------CONTACT ROUTES---------------------------------------
@@ -153,25 +155,26 @@ def contact_list():
     if request.method == 'GET':
         return render_template("contact_list.html", contacts=contacts)
 
-    # Get form variables
-    name = request.form.get("name")
-    type = request.form.get("type")
-    phone = request.form.get("phone")
+    elif request.method == 'POST':
+        # Get form variables
+        name = request.form.get("name")
+        type = request.form.get("type")
+        phone = request.form.get("phone")
 
-    user_id = session.get("user_id")
+        user_id = session.get("user_id")
 
-    new_contact = Contact(name=name, user_id=user_id)
-    new_phone = Phone(phone=phone, type=type)
+        new_contact = Contact(name=name, user_id=user_id)
+        new_phone = Phone(phone=phone, type=type)
 
-    new_contact.phones.append(new_phone)
+        new_contact.phones.append(new_phone)
 
-    db.session.add(new_contact)
-    db.session.commit()
+        db.session.add(new_contact)
+        db.session.commit()
 
 
-    flash(f"Contact {name} added.")
+        flash(f"Contact {name} added.")
 
-    return jsonify(new_contact.convert_to_dict())
+        return jsonify(new_contact.convert_to_dict())
 
 
 @app.route('/contacts/<int:contact_id>', methods=['GET','POST'])
@@ -183,19 +186,21 @@ def contact_profile(contact_id):
     if request.method == 'GET':
         return render_template("contact.html", contact=contact)
 
-    # Get form variables
-    name = request.form["name"]
-    phone = request.form["phone"]
+    elif request.method == 'POST':
+        # Get form variables
+        name = request.form["name"]
+        phone = request.form["phone"]
+        type = request.form["type"]
 
-    contact.name = name
-    contact.phone = phone
+        contact.name = name
+        contact.phones[0] = phone
 
-    db.session.add(contact)
-    db.session.commit()
+        db.session.add(contact)
+        db.session.commit()
 
-    flash(f"Contact {name} updated.")
+        flash(f"Contact {name} updated.")
 
-    return jsonify(contact.convert_to_dict())
+        return jsonify(contact.convert_to_dict())
 
 
 

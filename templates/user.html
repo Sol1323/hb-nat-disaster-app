@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <h1>{{ user.name }} ({{ user.user_id }})</h1>
-  <p><b>Email:</b> {{ user.email }}</p>
-  <p><b>Age:</b> {{ user.age }}</p>
-  <p><b>Residency Address:</b> {{ user.residency_address }}</p>
-  <p><b>Zipcode:</b> {{ user.zipcode }}</p>
-  <p><b>Allergies:</b> {{ user.allergies }}</p>
-  <p><b>Medications:</b> {{ user.medications }}</p>
-  <p><b>Phone:</b> {{ user.phone }}</p>
+  <div id="show-user-info">
+    <h1>{{ user.name }}</h1>
+    <p>({{ user.user_id }})<p>
+    <p><b>Email:</b> {{ user.email }}</p>
+    <p><b>Age:</b> {{ user.age }}</p>
+    <p><b>Residency Address:</b> {{ user.residency_address }}</p>
+    <p><b>Zipcode:</b> {{ user.zipcode }}</p>
+    <p><b>Allergies:</b> {{ user.allergies }}</p>
+    <p><b>Medications:</b> {{ user.medications }}</p>
+    <p><b>Phone:</b> {{ user.phone }}</p>
+  </div>
 
 <!------------------------------ EDIT USER FORM  ---------------------------------->
   <button type="button" id="edit-user-form-button">Edit</button>
@@ -49,7 +52,7 @@
             <p><b>Name:</b></p>
             <input class="edit-contact-name" type="text" value="{{ contact.name }}" name="name">
             <p><b>Type:</b></p>
-            <input class="edit-contact-type" type="text" value="{{ phone.type }}" name="phone">
+            <input class="edit-contact-type" type="text" value="{{ phone.type }}" name="type">
             <p><b>Phone:</b></p>
             <input class="edit-contact-phone" type="text" value="{{ phone.phone }}" name="phone">
             <input type="hidden" class="contact-id" name="contact-id" value="{{ contact.contact_id }}">

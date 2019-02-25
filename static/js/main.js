@@ -23,6 +23,7 @@ $('.contact-form').on('submit', (evt) => {
     'phone': $('.contact-phone').val()
   };
 // FIXME: Does not append when is the first contact that you are going to add into your list of contacts
+// FIXME: Does not append with edit button
   $.post('/contacts', formInputs, (contact) => {
     $('.user-contacts').append(`
                               <a href="/contacts/${contact.contact_id}"> ${contact.name} </a>
@@ -37,7 +38,7 @@ $('.contact-form').on('submit', (evt) => {
 
 // -------------------------UPDATE USER SCRIPT---------------------------
 
-$('.user-edit-form').on('submit', (evt) => {
+$('#user-edit-form').on('submit', (evt) => {
   evt.preventDefault();
 
   const user_id = $('.user-id').val();
@@ -52,8 +53,13 @@ $('.user-edit-form').on('submit', (evt) => {
     'medications': $('.user-medications').val(),
     'phone': $('.user-phone').val()
   };
+  console.log(user_id);
   // TODO: Add logic to show updated user's info withouth refreshing page
-  $.post('/users/'+ user_id, formInputs, (contact) => {
-    alert("this is working!!");
+  //Q: How to refresh the user's info in the page withouth appending
+  $.post('/users/'+ user_id, formInputs, (user) => {
+    // $('#show-user-info').each(function(){
+    //   console.log(this);
+      alert("its working");
+    // });
   });
 });

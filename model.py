@@ -30,6 +30,12 @@ class User(db.Model):
     allergies = db.Column(db.String(250), nullable=True)
     medications = db.Column(db.String(250), nullable=True)
     phone = db.Column(db.String(64), nullable=True)
+    # user_setting_id = db.Column(db.Integer,
+    #                      db.ForeignKey('user_settings.user_setting_id'))
+
+    #Define relationship to user_settings
+    # user_settings = db.relationship("UserSetting",
+    #                         backref=db.backref("user"))
 
 
 
@@ -57,6 +63,19 @@ class User(db.Model):
         # "user_settings" = self.user_settings
 
         return user_dict
+        # user_dict = {
+        #     "user_id" = self.user_id,
+        #     "email" = self.email,
+        #     "password" = self.password,
+        #     "name" = self.name,
+        #     "age" = self.age,
+        #     "residency_address" = self.residency_address,
+        #     "zipcode" = self.zipcode,
+        #     "allergies" = self.allergies,
+        #     "medications" = self.medications,
+        #     "phone" = self.phone
+        # }
+        #TODO: refactor according to relationship
 
 
 class Contact(db.Model):
@@ -127,9 +146,8 @@ class Setting(db.Model):
                          autoincrement=True,
                          primary_key=True)
 
+    eq = db.Column(db.String(20), primary_key=True)
 
-    nat_type_id = db.Column(db.Integer,
-                         db.ForeignKey('nat_types.nat_type_id'))
 
     # #Define relationship to users
     # user_settings = db.relationship("UserSetting")
@@ -147,7 +165,7 @@ class UserSetting(db.Model):
                          db.ForeignKey('users.user_id'))
     setting_id = db.Column(db.Integer,
                          db.ForeignKey('settings.setting_id'))
-    user_setting = db.Column(db.String(250), nullable=True)
+    user_value = db.Column(db.String(250), nullable=True)
 
     #Define relationship to user_settings
     user = db.relationship("User",
@@ -195,24 +213,6 @@ class Alert(db.Model):
         return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
 
-class NatType(db.Model):
-    """Natural Disaster Type in alert system"""
-
-    __tablename__ = "nat_types"
-
-    nat_type_id = db.Column(db.Integer,
-                        autoincrement=True,
-                         primary_key=True)
-    nat_type = db.Column(db.String(250))
-
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<NatType nat_type_id={self.nat_type_id} nat_type={self.nat_type}>"
-
-
-
 class NaturalDisaster(db.Model):
     """Natural Disaster in alert system"""
 
@@ -221,8 +221,7 @@ class NaturalDisaster(db.Model):
     nat_id = db.Column(db.Integer,
                         autoincrement=True,
                          primary_key=True)
-    nat_type_id = db.Column(db.Integer,
-                            db.ForeignKey("nat_types.nat_type_id"))
+    nat_type = db.Column(db.String(20))
     title = db.Column(db.String(350))
     latitude = db.Column(db.String(250))
     longitude = db.Column(db.String(250))
@@ -232,15 +231,10 @@ class NaturalDisaster(db.Model):
     earthquake = db.relationship("Earthquake",
                                     uselist=False)
 
-    #Define relationship to natural disaster type
-    nat_type = db.relationship("NatType",
-                                backref=db.backref("natural_disasters"))
-
-
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<NaturalDisaster nat_id={self.nat_id} location={self.location} timestamp={self.timestamp}>"
+        return f"<NaturalDisaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
 
 
 class Earthquake(db.Model):
@@ -260,7 +254,6 @@ class Earthquake(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<Earthquake nat_id={self.nat_id} magnitude={self.magnitude}>"
-
 
 
 #####################################################################

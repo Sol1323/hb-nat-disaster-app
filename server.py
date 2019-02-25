@@ -88,7 +88,7 @@ def login():
         session["user_id"] = user.user_id
 
         flash(f"{user.name} successfully logged in!")
-        return redirect(f"/users/{user.user_id}")
+    return redirect(f"/users/{user.user_id}")
 
 
 @app.route('/logout')
@@ -193,7 +193,9 @@ def contact_profile(contact_id):
         type = request.form["type"]
 
         contact.name = name
-        contact.phones[0] = phone
+        #FIXME: we should be modifying same phone in the idx of the list of phones
+        #Maybe adding idx or converting phones to dictionary
+        contact.phones[-1] = phone
 
         db.session.add(contact)
         db.session.commit()

@@ -11,10 +11,13 @@ user_juan = User(name="Juan", age=26, email="j@email.com", password="456",
             phone="12345678", allergies="seafood", medications="lorazepan")
 
 #CREATE SETTINGS
-earthquake_setting = UserSetting(user_value="4.5")
+eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
 
-user_fabio.user_settings.append(earthquake_setting)
-#TODO: check how to add a new user setting 
+fabio_mag_setting = UserSetting(setting=eq_mag_setting,
+                                user_value="4.5")
+
+user_fabio.user_settings.append(fabio_mag_setting)
+#TODO: check how to add a new user setting
 
 
 #CREATE PHONES

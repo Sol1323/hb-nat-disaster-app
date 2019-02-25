@@ -39,7 +39,7 @@ def signup():
 
     elif request.method == 'POST':
     # Get form variables
-        email = request.form["email"]
+        email = request.form.get('email')
         password = request.form["password"]
         name = request.form["name"]
         age = int(request.form["age"])
@@ -88,7 +88,7 @@ def login():
         session["user_id"] = user.user_id
 
         flash(f"{user.name} successfully logged in!")
-    return redirect(f"/users/{user.user_id}")
+        return redirect(f"/users/{user.user_id}")
 
 
 @app.route('/logout')

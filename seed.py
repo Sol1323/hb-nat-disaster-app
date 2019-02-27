@@ -17,7 +17,6 @@ fabio_mag_setting = UserSetting(setting=eq_mag_setting,
                                 user_value="4.5")
 
 user_fabio.user_settings.append(fabio_mag_setting)
-#TODO: check how to add a new user setting
 
 
 #CREATE PHONES

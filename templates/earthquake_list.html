@@ -14,5 +14,14 @@
     {% endfor %}
   </ul>
 
+  <p> {{ feeds }} </p>
+
+  <ul>
+    {% for idx in range(0, feeds|length) %}
+      <li>{{ feeds.event_title(idx) }}</li>
+    {% endfor %}
+  </ul>
+
+
 
 {% endblock %}

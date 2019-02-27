@@ -3,7 +3,7 @@
 from pprint import pformat
 import json
 import os
-
+from quakefeeds import QuakeFeed
 
 from jinja2 import StrictUndefined
 
@@ -27,7 +27,7 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 @app.route('/signup', methods=['GET','POST'])
@@ -35,19 +35,19 @@ def signup():
     """User sign up."""
 
     if request.method == 'GET':
-        return render_template("signup_form.html")
+        return render_template('signup_form.html')
 
     elif request.method == 'POST':
     # Get form variables
         email = request.form.get('email')
-        password = request.form["password"]
-        name = request.form["name"]
-        age = int(request.form["age"])
-        phone = request.form["phone"]
-        residency_address=request.form["residency-address"]
-        zipcode = request.form["zipcode"]
-        medications = request.form["medications"]
-        allergies = request.form["allergies"]
+        password = request.form['password']
+        name = request.form['name']
+        age = int(request.form['age'])
+        phone = request.form['phone']
+        residency_address=request.form['residency-address']
+        zipcode = request.form['zipcode']
+        medications = request.form['medications']
+        allergies = request.form['allergies']
 
         new_user = User(email=email,
                         password=password,
@@ -64,7 +64,7 @@ def signup():
         db.session.commit()
 
         flash(f"User {name} added.")
-        return redirect("/")
+        return redirect('/')
 
 
 @app.route('/login', methods=['GET','POST'])
@@ -76,28 +76,28 @@ def login():
 
     elif request.method == 'POST':
         # Get form variables
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form['email']
+        password = request.form['password']
 
         user = User.query.filter_by(email=email).first()
 
         if not user:
             flash("Oops! Email or password wrong. Please retry again.")
-            return redirect("/login")
+            return redirect('/login')
 
-        session["user_id"] = user.user_id
+        session['user_id'] = user.user_id
 
         flash(f"{user.name} successfully logged in!")
-        return redirect(f"/users/{user.user_id}")
+        return redirect(f'/users/{user.user_id}')
 
 
 @app.route('/logout')
 def logout():
     """Log out."""
 
-    del session["user_id"]
-    flash("Logged Out.")
-    return redirect("/")
+    del session['user_id']
+    flash('Logged Out.')
+    return redirect('/')
 
 
 @app.route('/users')
@@ -105,7 +105,7 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
-    return render_template("user_list.html", users=users)
+    return render_template('user_list.html', users=users)
 
 
 @app.route('/users/<int:user_id>', methods=['POST', 'GET'])
@@ -115,18 +115,18 @@ def user_profile(user_id):
     user = User.query.get(user_id)
 
     if request.method == 'GET':
-        return render_template("user.html", user=user)
+        return render_template('user.html', user=user)
 
     elif request.method == 'POST':
         # Get form variables
-        email = request.form["email"]
-        name = request.form["name"]
-        age = int(request.form["age"])
-        phone = request.form["phone"]
-        residency_address=request.form["residency_address"]
+        email = request.form['email']
+        name = request.form['name']
+        age = int(request.form['age'])
+        phone = request.form['phone']
+        residency_address=request.form['residency_address']
         zipcode = request.form["zipcode"]
-        medications = request.form["medications"]
-        allergies = request.form["allergies"]
+        medications = request.form['medications']
+        allergies = request.form['allergies']
 
         user.email = email
         user.name = name
@@ -153,15 +153,15 @@ def contact_list():
     contacts = Contact.query.all()
 
     if request.method == 'GET':
-        return render_template("contact_list.html", contacts=contacts)
+        return render_template('contact_list.html', contacts=contacts)
 
     elif request.method == 'POST':
         # Get form variables
-        name = request.form.get("name")
-        type = request.form.get("type")
-        phone = request.form.get("phone")
+        name = request.form.get('name')
+        type = request.form.get('type')
+        phone = request.form.get('phone')
 
-        user_id = session.get("user_id")
+        user_id = session.get('user_id')
 
         new_contact = Contact(name=name, user_id=user_id)
         new_phone = Phone(phone=phone, type=type)
@@ -184,13 +184,13 @@ def contact_profile(contact_id):
     contact = Contact.query.get(contact_id)
 
     if request.method == 'GET':
-        return render_template("contact.html", contact=contact)
+        return render_template('contact.html', contact=contact)
 
     elif request.method == 'POST':
         # Get form variables
-        name = request.form["name"]
-        phone = request.form["phone"]
-        type = request.form["type"]
+        name = request.form['name']
+        phone = request.form['phone']
+        type = request.form['type']
 
         contact.name = name
         #FIXME: we should be modifying same phone in the idx of the list of phones
@@ -211,8 +211,9 @@ def contact_profile(contact_id):
 def earthquake_list():
     """Show list of all earthquakes."""
 
+    feeds = QuakeFeed('4.5', 'hour')
     earthquakes = Earthquake.query.all()
-    return render_template("earthquake_list.html", earthquakes=earthquakes)
+    return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds)
 
 
 @app.route('/earthquakes/<int:nat_id>')
@@ -220,7 +221,7 @@ def earthquake_detail(nat_id):
     """Show info about an earthquake."""
 
     earthquake = Earthquake.query.get(nat_id)
-    return render_template("earthquake.html", earthquake=earthquake)
+    return render_template('earthquake.html', earthquake=earthquake)
 
 
 #----------------------------SETTINGS ROUTES---------------------------------------
@@ -247,7 +248,7 @@ def update_setting(setting_code):
 
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
     app.debug = True
@@ -255,4 +256,4 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
 
-    app.run(host="0.0.0.0")
+    app.run(host='0.0.0.0')

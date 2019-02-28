@@ -100,15 +100,24 @@
 <!------------------------------ ADD EARTHQUAKE ALERT SETTING ---------------------------------->
   <h3>Earthquake Alert Settings:</h3>
 
+  <div>
+    <h3>Magnitude Level:</h3>
+    <p id="mag-user-value"><p>
+  </div>
+
 <!-- TODO: Refactor model.py to store user's settings -->
-  <form class="earthquake-form" action="/settings" method="POST">
+  <form id="earthquake-form" action="/settings/eqmag" method="POST">
     <div>
       <label>
         Magnitude
         <input class="earth-mag" type="text" name="magnitude">
+        <input type="submit" value="Submit">
+        <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
       </label>
     </div>
   </form><br><br>
+
+
 
 
 {% endblock %}

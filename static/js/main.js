@@ -1,19 +1,27 @@
 "use strict";
 
-
-// -------------------------EDIT BUTTON TOGGLE SCRIPT---------------------------
-$("#edit-user-form-button").click(function(){
-        $("#user-edit-form").toggle();
-});
-
-
 $(".edit-contact-button").click(function(){
   const id = $(this).attr("id");
         $("#contact-edit-form-"+ id).toggle();
 });
 
+// -------------------------ADD EARTHQUAKE SETTING SCRIPT---------------------------
 
+$('#earthquake-form').on('submit', (evt) => {
+  evt.preventDefault();
+
+  const settingCode = $('.setting_code').val();
+  const formInputs = {
+    'magnitude': $('.earth-mag').val();
+  };
+
+  $.post('/settings/'+ settingCode, formInputs, (setting) => {
+    $('#mag-user-value').text(`${setting.user_value}`);
+  });
+});
 // -------------------------ADD CONTACT SCRIPT---------------------------
+
+
 $('.contact-form').on('submit', (evt) => {
   evt.preventDefault();
 
@@ -37,6 +45,10 @@ $('.contact-form').on('submit', (evt) => {
 
 
 // -------------------------UPDATE USER SCRIPT---------------------------
+$("#edit-user-form-button").click(function(){
+        $("#user-edit-form").toggle();
+});
+
 
 $('#user-edit-form').on('submit', (evt) => {
   evt.preventDefault();

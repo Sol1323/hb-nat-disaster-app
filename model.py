@@ -173,6 +173,17 @@ class UserSetting(db.Model):
     #Define relationship setting
     setting = db.relationship('Setting')
 
+    def convert_to_dict(self):
+        """Convert user setting into a dictionary"""
+
+        user_setting_dict = {
+            'user_setting_id': self.user_setting_id,
+            'user_id': self.user_id,
+            'setting_code': self.setting_code,
+            'user_value': self.user_value,
+        }
+
+        return user_setting_dict
 
 
 class Alert(db.Model):

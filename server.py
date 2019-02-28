@@ -10,7 +10,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, connect_to_db, db
+from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, Setting, UserSetting, connect_to_db, db
 
 
 app = Flask(__name__)
@@ -225,26 +225,27 @@ def earthquake_detail(nat_id):
 
 
 #----------------------------SETTINGS ROUTES---------------------------------------
-@app.route('/settings/<setting_code>', methods=['POST'])
+@app.route('/settings/setting_code', methods=['POST'])
 def update_setting(setting_code):
     """Add a contact into the database."""
 
     #TODO: Finish this route.
-    # Get form variables
-    # magnitude = request.form.get("magnitude")
-
-    #
-    # user_id = session.get("user_id")
-    #
-    # new_setting = UserSetting(user_value=magnitude, user_id=user_id)
-
-    # db.session.add(new_setting)
-    # db.session.commit()
+    #Get form variables
+    magnitude = request.form.get("magnitude")
 
 
-    # flash(f"Setting added.")
-    #
-    # return jsonify(new_setting.convert_to_dict())
+    user_id = session.get("user_id")
+
+    eq_mag_setting = Setting(setting_code, "Earthquake magnitude alert level")
+    new_setting = UserSetting(user_value=magnitude, user_id=user_id, setting=eq_mag_setting)
+
+    db.session.add(new_setting)
+    db.session.commit()
+
+
+    flash(f"Setting added.")
+
+    return jsonify(new_setting.convert_to_dict())
 
 
 

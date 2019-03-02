@@ -18,7 +18,7 @@
 
   <ul>
     {% for idx in range(0, feeds|length) %}
-      <li>{{ feeds.event_title(idx) }}</li>
+      <li>Title: {{ feeds.event_title(idx) }} Time: {{ feeds.event_time(idx) }} </li>
     {% endfor %}
   </ul>
 

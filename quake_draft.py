@@ -31,3 +31,34 @@ timestamp = feed.event_time(0) #Ex. datetime.datetime(2015, 4, 16, 19, 18, 39, t
 sorted_quakes = sorted(user_quakes, key=lambda q: q['properties'].get('time', 0), reverse=True)
 #Get time of the latest earthquake
 latest_quake_time = list(feed)[0]['properties']['time'] #1551317554070
+
+
+# def get_all_earthquakes(level, period):
+#     """Get all earthquakes denpending on magnitude string"""
+#     #TODO: q1->We want to get the most recent earthquakes by the hour depending on the user's value?
+#     feed = QuakeFeed(level, period)
+#
+#     if feed:
+#         for idx in range(0, len(feed)):
+#             title = feed.event_title(idx)
+#             magnitude = feed.magnitude(idx)
+#             timestamp = feed.event_time(idx)
+#             location = feed.place(idx)
+#
+#             coordinates = feed.location(idx) #coord = []
+#             latitude = coordinates[0]
+#             longitude = coordinates[1]
+
+            # NaturalDisaster(title=title,
+            #                 latitude=latitude,
+            #                 longitude=longitude,
+            #                 location=location,
+            #                 timestamp=timestamp)
+            # Earthquake(magnitude=magnitude)
+            #
+            #TODO: db.create_all(), add & commit here in seed.py or when there is a match in server.py
+
+    #TODO: q3->How to get the latest earthquakes depending on location?Ex. Get all in CA region
+
+# last_feed = get_all_earthquakes("all", "hour")
+#Need to create a timer that trigers the call every 30seconds for ex.

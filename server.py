@@ -3,12 +3,15 @@
 from pprint import pformat
 import json
 import os
+import schedule
 from quakefeeds import QuakeFeed
 
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+
+from quake import *
 
 from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, Setting, UserSetting, connect_to_db, db
 
@@ -205,13 +208,12 @@ def contact_profile(contact_id):
         return jsonify(contact.convert_to_dict())
 
 
-
 #----------------------------EARTHQUAKE ROUTES---------------------------------------
 @app.route('/earthquakes', methods=['GET'])
 def earthquake_list():
     """Show list of all earthquakes."""
 
-    feeds = QuakeFeed('4.5', 'hour')
+    feeds = QuakeFeed('all', 'hour')
     earthquakes = Earthquake.query.all()
     return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds)
 
@@ -252,9 +254,15 @@ def update_setting(setting_code):
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
+
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
     DebugToolbarExtension(app)
+    # schedule.run_continuously(1)
+    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
     app.run(host='0.0.0.0')

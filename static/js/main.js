@@ -7,22 +7,22 @@ $(".edit-contact-button").click(function(){
 
 // -------------------------ADD EARTHQUAKE SETTING SCRIPT---------------------------
 
-$('#earthquake-form').on('submit', (evt) => {
-  evt.preventDefault();
-
-  const settingCode = $('.setting_code').val();
-  const formInputs = {
-    'magnitude': $('.earth-mag').val();
-  };
-
-  $.post('/settings/'+ settingCode, formInputs, (setting) => {
-    $('#mag-user-value').text(`${setting.user_value}`);
-  });
-});
+// $('#earthquake-form').on('submit', (evt) => {
+//   evt.preventDefault();
+//
+//   const settingCode = $('.setting_code').val();
+//   const formInputs = {
+//     'magnitude': $('.earth-mag').val();
+//   };
+//
+//   $.post('/settings/'+ settingCode, formInputs, (setting) => {
+//     $('#mag-user-value').text(`${setting.user_value}`);
+//   });
+// });
 // -------------------------ADD CONTACT SCRIPT---------------------------
 
 
-$('.contact-form').on('submit', (evt) => {
+$('#add-contact-form').on('submit', (evt) => {
   evt.preventDefault();
 
   const formInputs = {

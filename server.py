@@ -4,7 +4,6 @@ from pprint import pformat
 import json
 import os
 import schedule
-from quakefeeds import QuakeFeed
 
 from jinja2 import StrictUndefined
 
@@ -20,6 +19,7 @@ app = Flask(__name__)
 
 #Get secret key for DebugToolbarExtension
 app.secret_key = os.environ.get('APP_SECRET_KEY')
+GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 
 # FIXME: Fix this to raise an error.
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
@@ -118,7 +118,7 @@ def user_profile(user_id):
     user = User.query.get(user_id)
 
     if request.method == 'GET':
-        return render_template('user.html', user=user)
+        return render_template('user.html', user=user, GOOGLE_KEY=GOOGLE_KEY)
 
     elif request.method == 'POST':
         # Get form variables
@@ -213,7 +213,8 @@ def contact_profile(contact_id):
 def earthquake_list():
     """Show list of all earthquakes."""
 
-    feeds = QuakeFeed('all', 'hour')
+    #Get all earthquakes in the past hour
+    feeds = get_all_earthquakes("all", "hour")
     earthquakes = Earthquake.query.all()
     return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds)
 

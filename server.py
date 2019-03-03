@@ -1,16 +1,17 @@
 """Natural Disaster Alert App."""
 
-from pprint import pformat
 import json
 import os
 import schedule
+from quake import *
+# from twilio.twiml.messaging_response import MessagingResponse, Message
+from twilio.rest import Client
+# from twilio.base.exceptions import TwilioRestException
+# import urllib
 
 from jinja2 import StrictUndefined
-
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-
-from quake import *
 
 from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, Setting, UserSetting, connect_to_db, db
 
@@ -19,7 +20,16 @@ app = Flask(__name__)
 
 #Get secret key for DebugToolbarExtension
 app.secret_key = os.environ.get('APP_SECRET_KEY')
+#Get google maps secret key
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
+#Get twilio account sid, auth token, phone number for sms
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+
+# Account SID and Auth Token for twilio
+client = Client('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN')
+
 
 # FIXME: Fix this to raise an error.
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
@@ -249,6 +259,40 @@ def update_setting(setting_code):
     flash(f"Setting added.")
 
     return jsonify(new_setting.convert_to_dict())
+
+
+#----------------------------SMS ROUTES---------------------------------------
+
+@app.route('/alerts')
+def create_alerts():
+    """Create an sms alert to user's contacts."""
+
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    user_contacts = None
+
+    # Grab the relevant phone numbers.
+    #TODO: Modify to alert multiple phone numbers
+    to_number = request.form['To']
+
+    lat = request.args.get("lat")
+    lng = request.args.get("lng")
+
+    print("\n\n\n")
+    print("LAT", lat)
+    print("LNG", lng)
+
+    message = client.messages \
+                    .create(
+                         body=f"{user.name} location is {lat} {lng}. The person is in an earthquake.",
+                         from_=TWILIO_PHONE_NUMBER,
+                         to=user_contacts
+                     )
+
+    print(message.sid)
+
+    return redirect(f'/users/{user.user_id}')
+    # return str(response)
 
 
 

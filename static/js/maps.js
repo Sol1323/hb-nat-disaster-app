@@ -17,6 +17,10 @@ function initMap() {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
+      // Send user's location into server alert route
+      $.get('/alerts', pos, (results) => {
+        console.log(typeof(pos));
+      });
 
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location found.');

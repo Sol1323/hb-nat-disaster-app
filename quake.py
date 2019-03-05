@@ -59,7 +59,7 @@ def get_new_earthquake(level, period):
         last_feed_time = get_time_from_earthquake(0, last_feed)
         new_feed_time = get_time_from_earthquake(0, new_feed)
 
-        while last_feed.event(0) == new_feed.event(0):
+        while last_feed_time == new_feed_time:
             new_feed = get_all_earthquakes(level, period)
             new_feed_time = get_time_from_earthquake(0, new_feed)
             # new_feed = ["New Earthquake info"] tests to make sure logic worked
@@ -79,12 +79,12 @@ def get_new_earthquake(level, period):
 
 
 
-if __name__ == '__main__':
-    # request = get_new_earthquake("all", "hour")
-    schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
-
-    # schedule.run_continuously(1)
-    #
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+# if __name__ == '__main__':
+#
+#     schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+#
+#     # schedule.run_continuously(1)
+#     #
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)

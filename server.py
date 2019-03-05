@@ -3,6 +3,7 @@
 import json
 import os
 import schedule
+import googlemaps
 from quake import *
 # from twilio.twiml.messaging_response import MessagingResponse, Message
 from twilio.rest import Client
@@ -23,12 +24,14 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 #Get google maps secret key
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 #Get twilio account sid, auth token, phone number for sms
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+TWILIO_ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
+TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
+TWILIO_PHONE_NUMBER = os.environ['TWILIO_PHONE_NUMBER']
+TWILIO_TEST_TOKEN = os.environ['TWILIO_TEST_TOKEN']
+TWILIO_TEST_SID = os.environ['TWILIO_TEST_SID']
 
 # Account SID and Auth Token for twilio
-client = Client('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN')
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 
 # FIXME: Fix this to raise an error.
@@ -270,26 +273,36 @@ def create_alerts():
     user_id = session['user_id']
     user = User.query.get(user_id)
     user_contacts = None
+    gmaps = googlemaps.Client(GOOGLE_KEY)
+    lat = request.args.get("lat")
+    lng = request.args.get("lng")
+
+    if lat:
+        result = gmaps.reverse_geocode(latlng=(lat, lng))
+        address = result[0]['formatted_address']
 
     # Grab the relevant phone numbers.
     #TODO: Modify to alert multiple phone numbers
-    to_number = request.form['To']
-
-    lat = request.args.get("lat")
-    lng = request.args.get("lng")
+    # to_number = request.form['To']
 
     print("\n\n\n")
     print("LAT", lat)
     print("LNG", lng)
+    print("address", address)
 
-    message = client.messages \
-                    .create(
-                         body=f"{user.name} location is {lat} {lng}. The person is in an earthquake.",
-                         from_=TWILIO_PHONE_NUMBER,
-                         to=user_contacts
-                     )
+    schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
-    print(message.sid)
+    # message = client.messages \
+    #                 .create(
+    #                      body=f"{user.name} location is {lat} {lng}. The address is: {address} The person is in an earthquake.",
+    #                      from_=TWILIO_PHONE_NUMBER,
+    #                      to=to_number
+    #                  )
+    #
+    # print(message.sid)
 
     return redirect(f'/users/{user.user_id}')
     # return str(response)
@@ -306,8 +319,8 @@ if __name__ == '__main__':
     DebugToolbarExtension(app)
     # schedule.run_continuously(1)
     # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    app.run(host='0.0.0.0')
+    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
     # while True:
     #     schedule.run_pending()
     #     time.sleep(1)
-
-    app.run(host='0.0.0.0')

@@ -2,25 +2,7 @@ from quakefeeds import QuakeFeed
 import schedule
 import time
 
-# from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, connect_to_db, db
-
-
-
-##############################  PSEUDOCODE  ################################################################
-#Always getting in the past hour to get the most recent earthquakes
-    #Define last_feed of QuakeFeed()
-    #Define new_feed of QuakeFeed()
-
-    #Compare new_feed time vs. last_feed time
-        #If they are not equal
-            #Redefine new_feed as last_feed
-            #return last_earthquake on the new_feed
-
-#magnitude will be what the user user inputs as setting
-# get all settings with eq_magnitude
-# get user_value for the magnitude
-# pass magnitude into the QuakeFeed instance
-#############################################################################################################
+from model import NaturalDisaster, Earthquake
 
 ALLOWED_LEVELS  = { "significant", "4.5", "2.5", "1.0", "all" }
 ALLOWED_PERIODS = { "hour", "day", "week", "month" }
@@ -30,19 +12,25 @@ def get_all_earthquakes(level, period):
     """Get all earthquakes denpending on magnitude and period we get a QuakeFeed object"""
 
     all_earthquakes = QuakeFeed(level, period)
-    # schedule.every(5).seconds.do(get_all_earthquakes, level="all", period="hour")
+
     return all_earthquakes
 
-# def schedule_first_earthquake():
-#     #do this only once
-#     schedule.every(5).seconds.do(get_all_earthquakes, level="all", period="hour")
 
-def get_time_from_earthquake(idx, feed):
-    """Get time from earthquake in miliseconds milliseconds since the epoch"""
+def get_time_from_earthquake(feed, idx):
+    """Get time from earthquake in miliseconds since the epoch"""
 
     time_ms = feed[idx]["properties"]["time"]
 
     return time_ms
+
+def get_coords(feed, idx):
+    """Get coordinates from earthquake in a tuple (lat, lng)"""
+
+    coord = feed.location(idx)
+    lng = coord[0]
+    lat = coord[1]
+
+    return (lat, lng)
 
 
 def get_new_earthquake(level, period):
@@ -67,24 +55,64 @@ def get_new_earthquake(level, period):
             # print("Last feed is now: ", last_feed)
 
         #once new feed is different we will output new_earthquake
-        new_earthquake = new_feed
+        new_earthquake_feed = new_feed
         print("New earthquake is: ", new_earthquake)
         print("New earthquake time: ", new_feed.event_time(0))
 
-        return new_earthquake
-        #We will return the whole QuakeFeed object to be able to grab data with feed individual methods
-        #Remember to use idx 0 to grab the new_earthquake in the feed and save it in the database
+        save_quake_into_db(new_earthquake_feed)
+
+        return new_earthquake_feed # type: QuakeFeed obj
         #TODO: refactor code to be able to grab multiple new earthquake []
         # then append to list all the new_earthquakes
 
+def create_earthquake_for_db(feed, idx=0):
+    """Save earthquake into database using feed methods to get data"""
 
+    nat_type = "earthquake"
+    title = feed.event_title(idx) #Ex. 'USGS Magnitude 4.5+ Earthquakes, Past Day'
+
+    #Get magnitude of the earthquake
+    magnitude = feed.magnitude(idx)
+
+    #Get location coordinates
+    coordinates = feed.location(idx)
+    longitude = str(coordinates[0])
+    latitude = str(coordinates[1])
+
+    #Get place description
+    location = feed.place(idx)
+
+    #This will give us the time in format
+    timestamp = feed.event_time(idx) #Ex. datetime.datetime(2015, 4, 16, 19, 18, 39, tzinfo=datetime.timezone.utc)
+
+
+    earthquake = Earthquake(magnitude=magnitude)
+
+
+    nat_disaster = NaturalDisaster(title=title,
+                                   nat_type=nat_type,
+                                   latitude=latitude,
+                                   longitude=longitude,
+                                   location=location,
+                                   timestamp=timestamp)
+
+    earthquake.natural_disaster = nat_disaster
+
+    return earthquake
+
+
+
+# def schedule_first_earthquake():
+#     #do this only once
+#     schedule.every(5).seconds.do(get_all_earthquakes, level="all", period="hour")
 
 # if __name__ == '__main__':
-#
-#     schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
-#
-#     # schedule.run_continuously(1)
-#     #
-#     while True:
-#         schedule.run_pending()
-#         time.sleep(1)
+
+
+    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    #
+    # # schedule.run_continuously(1)
+    # #
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)

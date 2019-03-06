@@ -4,7 +4,9 @@ import json
 import os
 import schedule
 import googlemaps
+from geopy import distance
 from quake import *
+
 # from twilio.twiml.messaging_response import MessagingResponse, Message
 from twilio.rest import Client
 # from twilio.base.exceptions import TwilioRestException
@@ -32,6 +34,9 @@ TWILIO_TEST_SID = os.environ['TWILIO_TEST_SID']
 
 # Account SID and Auth Token for twilio
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+#Define google maps client
+gmaps = googlemaps.Client(GOOGLE_KEY)
 
 
 # FIXME: Fix this to raise an error.
@@ -264,7 +269,7 @@ def update_setting(setting_code):
     return jsonify(new_setting.convert_to_dict())
 
 
-#----------------------------SMS ROUTES---------------------------------------
+#----------------------------ALERT ROUTES---------------------------------------
 
 @app.route('/alerts')
 def create_alerts():
@@ -273,46 +278,59 @@ def create_alerts():
     user_id = session['user_id']
     user = User.query.get(user_id)
     user_contacts = None
-    gmaps = googlemaps.Client(GOOGLE_KEY)
-    lat = request.args.get("lat")
-    lng = request.args.get("lng")
+    lat = request.args.get('lat')
+    lng = request.args.get('lng')
 
     if lat:
         result = gmaps.reverse_geocode(latlng=(lat, lng))
         address = result[0]['formatted_address']
 
-    # Grab the relevant phone numbers.
-    #TODO: Modify to alert multiple phone numbers
-    # to_number = request.form['To']
+    feed = get_all_earthquakes('all', 'hour')
+
+    user_current_location = (lat, lng)
+    eq_location = get_coords(feed, 0) #(lat,lng)
+    diff_distance = distance.distance(user_current_location, eq_location).miles
+
+    #TEST WITH DATABASE EARTHQUAKE
+    ca_eq = NaturalDisaster.query.get(4)
+    magnitude = ca_eq.earthquake.magnitude
+    lat_test = float(ca_eq.latitude)
+    lng_test = float(ca_eq.longitude)
+    test_eq_coord = (lat_test, lng_test)
+    test_distance = distance.distance(user_current_location, test_eq_coord).miles
+        # Grab the relevant phone numbers.
+        #TODO: Modify to alert multiple phone numbers
+        # to_number = request.form['To']
+    if test_distance < 400:
+        print("Is passing through the test distance if")
+        message = client.messages \
+                        .create(
+                             body=f"{user.name} location is {lat} {lng}. The address is: {address} The person is in an earthquake.",
+                             from_=TWILIO_PHONE_NUMBER,
+                             to=to_number
+                         )
+
+        print("This is the message sid:",message.sid)
+
+    eq = create_earthquake_for_db(feed)
+    db.session.add(eq)
+    db.session.commit()
 
     print("\n\n\n")
     print("LAT", lat)
     print("LNG", lng)
     print("address", address)
-
-    schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-
-    # message = client.messages \
-    #                 .create(
-    #                      body=f"{user.name} location is {lat} {lng}. The address is: {address} The person is in an earthquake.",
-    #                      from_=TWILIO_PHONE_NUMBER,
-    #                      to=to_number
-    #                  )
-    #
-    # print(message.sid)
+    print("feed:", feed)
+    print("test coordinates:", test_eq_coord)
+    print("test distance diff:", test_distance)
 
     return redirect(f'/users/{user.user_id}')
     # return str(response)
 
 
-
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
@@ -320,7 +338,6 @@ if __name__ == '__main__':
     # schedule.run_continuously(1)
     # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
     app.run(host='0.0.0.0')
-    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
     # while True:
     #     schedule.run_pending()
     #     time.sleep(1)

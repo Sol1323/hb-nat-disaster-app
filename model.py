@@ -209,11 +209,11 @@ class Alert(db.Model):
                             uselist=False)
 
     #TODO: Draft of init method. Watch how to instantiate a message using instance attibutes.
-    # def __init__(self, user, nat):  # Alert(juan, natural_disaster_1)
-    #     self.user = user
-    #     # etc
-    #
-    #     self.message = f"{user.medications}"
+    def __init__(self, user, nat, user_location, user_coordinates):  # Alert(juan, natural_disaster_1)
+        self.user = user
+        self.natural_disaster = nat
+
+        self.message = f"Earthquake: {natural_disaster.title} near {user.name} the persons location is: {user_location}. {user.name} location coordinates (lat,lng): {user_coordinates} | Age: {user.age} | Medications: {user.medications} | Allergies: {user.allergies}."
 
 
     def __repr__(self):

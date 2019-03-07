@@ -25,12 +25,14 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('APP_SECRET_KEY')
 #Get google maps secret key
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
-#Get twilio account sid, auth token, phone number for sms
-TWILIO_ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
-TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
-TWILIO_PHONE_NUMBER = os.environ['TWILIO_PHONE_NUMBER']
-TWILIO_TEST_TOKEN = os.environ['TWILIO_TEST_TOKEN']
-TWILIO_TEST_SID = os.environ['TWILIO_TEST_SID']
+
+#Get twilio account sid, auth token, phone number for sms and test phones
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
+TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
+TEST_PHONE = os.environ.get('TEST_PHONE')
 
 # Account SID and Auth Token for twilio
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -213,6 +215,7 @@ def contact_profile(contact_id):
         phone = request.form['phone']
         type = request.form['type']
 
+        contact = Contact.query.get(contact_id)
         contact.name = name
         #FIXME: we should be modifying same phone in the idx of the list of phones
         #Maybe adding idx or converting phones to dictionary
@@ -246,19 +249,20 @@ def earthquake_detail(nat_id):
 
 
 #----------------------------SETTINGS ROUTES---------------------------------------
-@app.route('/settings/setting_code', methods=['POST'])
+@app.route('/settings/<setting_code>', methods=['POST'])
 def update_setting(setting_code):
     """Add a contact into the database."""
 
     #TODO: Finish this route.
     #Get form variables
     magnitude = request.form.get("magnitude")
-
+    # setting = Setting.query.get("eqmag")
+    # eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
 
     user_id = session.get("user_id")
 
-    eq_mag_setting = Setting(setting_code, "Earthquake magnitude alert level")
-    new_setting = UserSetting(user_value=magnitude, user_id=user_id, setting=eq_mag_setting)
+    # eq_mag_setting = Setting(setting_code, "Earthquake magnitude alert level")
+    new_setting = UserSetting(user_value=magnitude, user_id=user_id, setting_code=setting_code)
 
     db.session.add(new_setting)
     db.session.commit()
@@ -300,21 +304,33 @@ def create_alerts():
     test_distance = distance.distance(user_current_location, test_eq_coord).miles
         # Grab the relevant phone numbers.
         #TODO: Modify to alert multiple phone numbers
-        # to_number = request.form['To']
+        # contacts = user.contacts
+
+    #TODO:  instantiate alert and formulate the message
+    # body = Alert(user, ca_eq, address, user_current_location)
+
+    # If user.setting is 4.5 or higher then it can be felt from far away < 400
+    # If user.setting is lower than 4.5 then it can be felt from closer distance 100
+    #when committing to db make sure is not the same eq as before, make sure is not already in db
     if test_distance < 400:
-        print("Is passing through the test distance if")
+        # eq = create_earthquake_for_db(feed)
+        # db.session.add(eq)
+        # db.session.commit()
+        # for contact in contacs:
         message = client.messages \
                         .create(
                              body=f"{user.name} location is {lat} {lng}. The address is: {address} The person is in an earthquake.",
                              from_=TWILIO_PHONE_NUMBER,
-                             to=to_number
+                             to=TEST_PHONE #contact for testing just direct phone number
                          )
-
+        # db.session.add(body)
+        # db.session.commit()
+        flash(f"Alert message sent to your contacts.")
         print("This is the message sid:",message.sid)
 
-    eq = create_earthquake_for_db(feed)
-    db.session.add(eq)
-    db.session.commit()
+    # eq = create_earthquake_for_db(feed)
+    # db.session.add(eq)
+    # db.session.commit()
 
     print("\n\n\n")
     print("LAT", lat)
@@ -331,12 +347,12 @@ def create_alerts():
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
+    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     # schedule.run_continuously(1)
-    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
     app.run(host='0.0.0.0')
     # while True:
     #     schedule.run_pending()

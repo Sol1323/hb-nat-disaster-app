@@ -98,26 +98,31 @@
 
 
 <!------------------------------ ADD EARTHQUAKE ALERT SETTING ---------------------------------->
-  <h3>Earthquake Alert Settings:</h3>
+  <h2>Earthquake Alert Settings:</h2>
+
+  <!-- TODO: Toggle button on/off alert -->
+  <label class="checkbox-inline">
+    <input type="checkbox" checked data-toggle="toggle"> EARTHQUAKE ALERTS
+  </label>
 
   <div>
-    <h3>Magnitude Level:</h3>
+    <h3>Magnitude Level</h3>
     <p id="mag-user-value"><p>
   </div>
 
 <!-- TODO: Refactor model.py to store user's settings -->
   <form id="earthquake-form" action="/settings/eqmag" method="POST">
-    <div>
-      <label>
-        Magnitude
-        <input class="earth-mag" type="text" name="magnitude">
-        <input type="submit" value="Submit">
-        <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
-      </label>
-    </div>
+    <select name="magnitude">
+        <option value="4.5">4.5 or higher</option>
+        <option value="2.5">2.5 or higher</option>
+    </select>
+    <br><br>
+    <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
+    <input type="submit" value="Submit">
   </form><br><br>
 
-<div id="map"></div>
+  <div id="map"></div>
+
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
 </script>
 <script src="/static/js/maps.js"></script>

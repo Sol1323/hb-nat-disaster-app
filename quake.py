@@ -1,7 +1,7 @@
 from quakefeeds import QuakeFeed
 import schedule
 import time
-
+# from server import session,
 from model import NaturalDisaster, Earthquake
 
 ALLOWED_LEVELS  = { "significant", "4.5", "2.5", "1.0", "all" }
@@ -44,12 +44,12 @@ def get_new_earthquake(level, period):
 
     #schedule get_all_earthquakes every 5 secs, compare results
     if last_feed:
-        last_feed_time = get_time_from_earthquake(0, last_feed)
-        new_feed_time = get_time_from_earthquake(0, new_feed)
+        last_feed_time = get_time_from_earthquake(last_feed, 0)
+        new_feed_time = get_time_from_earthquake(new_feed, 0)
 
         while last_feed_time == new_feed_time:
             new_feed = get_all_earthquakes(level, period)
-            new_feed_time = get_time_from_earthquake(0, new_feed)
+            new_feed_time = get_time_from_earthquake(new_feed, 0)
             # new_feed = ["New Earthquake info"] tests to make sure logic worked
             # print("New feed is now: ", new_feed)
             # print("Last feed is now: ", last_feed)
@@ -59,7 +59,7 @@ def get_new_earthquake(level, period):
         print("New earthquake is: ", new_earthquake)
         print("New earthquake time: ", new_feed.event_time(0))
 
-        save_quake_into_db(new_earthquake_feed)
+        # save_quake_into_db(new_earthquake_feed)
 
         return new_earthquake_feed # type: QuakeFeed obj
         #TODO: refactor code to be able to grab multiple new earthquake []
@@ -101,18 +101,13 @@ def create_earthquake_for_db(feed, idx=0):
     return earthquake
 
 
-
-# def schedule_first_earthquake():
-#     #do this only once
-#     schedule.every(5).seconds.do(get_all_earthquakes, level="all", period="hour")
-
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
 
-    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+
+    # schedule.run_continuously(1)
     #
-    # # schedule.run_continuously(1)
-    # #
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

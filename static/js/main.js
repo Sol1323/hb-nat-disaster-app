@@ -33,11 +33,14 @@ $('#add-contact-form').on('submit', (evt) => {
 // FIXME: Does not append when is the first contact that you are going to add into your list of contacts
 // FIXME: Does not append with edit button
   $.post('/contacts', formInputs, (contact) => {
+    console.log(contact)
     $('.user-contacts').append(`
                               <a href="/contacts/${contact.contact_id}"> ${contact.name} </a>
-                              <li>${contact.type}: ${contact.phone}</li>`
+                              <li>${contact.phone[0].type}: ${contact.phone[0].phone}</li>
+                              <button type="button" class="edit-contact-button" id="{{ contact.contact_id }}">Edit</button>
+                              `
                               );
-    $('.contact-form').each(function(){
+    $('#add-contact-form').each(function(){
       this.reset();
     });
   });

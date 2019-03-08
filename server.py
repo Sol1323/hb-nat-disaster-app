@@ -8,7 +8,7 @@ from geopy import distance
 from quake import *
 
 # from twilio.twiml.messaging_response import MessagingResponse, Message
-from twilio.rest import Client
+# from twilio.rest import Client
 # from twilio.base.exceptions import TwilioRestException
 # import urllib
 
@@ -27,15 +27,15 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 
 #Get twilio account sid, auth token, phone number for sms and test phones
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
-TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
-TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
+# TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+# TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+# TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+# TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
+# TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
 TEST_PHONE = os.environ.get('TEST_PHONE')
-
-# Account SID and Auth Token for twilio
-client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+#
+# # Account SID and Auth Token for twilio
+# client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 #Define google maps client
 gmaps = googlemaps.Client(GOOGLE_KEY)
@@ -138,6 +138,7 @@ def user_profile(user_id):
     user = User.query.get(user_id)
 
     if request.method == 'GET':
+
         return render_template('user.html', user=user, GOOGLE_KEY=GOOGLE_KEY)
 
     elif request.method == 'POST':
@@ -275,85 +276,66 @@ def update_setting(setting_code):
 
 #----------------------------ALERT ROUTES---------------------------------------
 
-@app.route('/alerts')
+@app.route('/locations')
 def create_alerts():
     """Create an sms alert to user's contacts."""
 
     user_id = session['user_id']
     user = User.query.get(user_id)
-    user_contacts = None
     lat = request.args.get('lat')
     lng = request.args.get('lng')
 
-    if lat:
-        result = gmaps.reverse_geocode(latlng=(lat, lng))
-        address = result[0]['formatted_address']
+    session['lat'] = lat
+    session['lng'] = lng
 
-    feed = get_all_earthquakes('all', 'hour')
+    result = gmaps.reverse_geocode(latlng=(lat, lng))
+    address = result[0]['formatted_address']
 
-    user_current_location = (lat, lng)
-    eq_location = get_coords(feed, 0) #(lat,lng)
-    diff_distance = distance.distance(user_current_location, eq_location).miles
+    user.add_location(lat, lng, address)
 
-    #TEST WITH DATABASE EARTHQUAKE
-    ca_eq = NaturalDisaster.query.get(4)
-    magnitude = ca_eq.earthquake.magnitude
-    lat_test = float(ca_eq.latitude)
-    lng_test = float(ca_eq.longitude)
-    test_eq_coord = (lat_test, lng_test)
-    test_distance = distance.distance(user_current_location, test_eq_coord).miles
-        # Grab the relevant phone numbers.
-        #TODO: Modify to alert multiple phone numbers
-        # contacts = user.contacts
 
-    #TODO:  instantiate alert and formulate the message
-    # body = Alert(user, ca_eq, address, user_current_location)
-
-    # If user.setting is 4.5 or higher then it can be felt from far away < 400
-    # If user.setting is lower than 4.5 then it can be felt from closer distance 100
-    #when committing to db make sure is not the same eq as before, make sure is not already in db
-    if test_distance < 400:
-        # eq = create_earthquake_for_db(feed)
-        # db.session.add(eq)
-        # db.session.commit()
-        # for contact in contacs:
-        message = client.messages \
-                        .create(
-                             body=f"{user.name} location is {lat} {lng}. The address is: {address} The person is in an earthquake.",
-                             from_=TWILIO_PHONE_NUMBER,
-                             to=TEST_PHONE #contact for testing just direct phone number
-                         )
-        # db.session.add(body)
-        # db.session.commit()
-        flash(f"Alert message sent to your contacts.")
-        print("This is the message sid:",message.sid)
-
-    # eq = create_earthquake_for_db(feed)
-    # db.session.add(eq)
-    # db.session.commit()
-
-    print("\n\n\n")
-    print("LAT", lat)
-    print("LNG", lng)
-    print("address", address)
-    print("feed:", feed)
-    print("test coordinates:", test_eq_coord)
-    print("test distance diff:", test_distance)
-
-    return redirect(f'/users/{user.user_id}')
+    return redirect(f'/users/{user_id}')
+#
+#     # eq = create_earthquake_for_db(feed)
+#     # db.session.add(eq)
+#     # db.session.commit()
+#
+#
+#
+#     return redirect(f'/users/{user.user_id}')
     # return str(response)
+
+#REAL DATA
+# user_id = session['user_id']
+#
+# lat = request.args.get('lat')
+# lng = request.args.get('lng')
+# print(user_id)
+#
+# #COORDINATES
+# user_location = (lat, lng)
+
+
+
+# print("\n\n\n")
+# print("LAT", lat)
+# print("LNG", lng)
+# print("address", address)
+# print("feed:", feed)
+# print("test coordinates:", test_eq_coord)
+# print("test distance diff:", test_distance)
+
+
+
 
 
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    # schedule.every(5).seconds.do(get_new_earthquake, level="all", period="hour")
+    schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    # schedule.run_continuously(1)
+    schedule.run_continuously(1)
     app.run(host='0.0.0.0')
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)

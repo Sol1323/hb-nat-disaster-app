@@ -62,6 +62,18 @@ class User(db.Model):
         }
         return user_dict
 
+    def add_location(self, lat, lng, address):
+        location = Location(lat=lat, lng=lng, address=address)
+        self.locations.append(location)
+
+        db.session.add(self)
+        db.session.commit()
+
+    def create_message(self, natural_disaster):
+
+        message = Alert(message = f"Earthquake: {natural_disaster.title} near {self.name} the persons location is: {self.locations[-1].address}. {self.name} location coordinates (lat,lng): ({self.locations[-1].lat},{self.locations[-1].lat}) | Age: {self.age} | Medications: {self.medications} | Allergies: {self.allergies}.")
+
+
 
 class Contact(db.Model):
     """Contact from user for alert system"""
@@ -208,13 +220,6 @@ class Alert(db.Model):
     user = db.relationship('User',
                             uselist=False)
 
-    #TODO: Draft of init method. Watch how to instantiate a message using instance attibutes.
-    def __init__(self, user, natural_disaster, user_location, user_coordinates):  # Alert(juan, natural_disaster_1)
-        self.user = user
-        self.natural_disaster = natural_disaster
-
-        self.message = f"Earthquake: {natural_disaster.title} near {user.name} the persons location is: {user_location}. {user.name} location coordinates (lat,lng): {user_coordinates} | Age: {user.age} | Medications: {user.medications} | Allergies: {user.allergies}."
-
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -263,6 +268,27 @@ class Earthquake(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<Earthquake nat_id={self.nat_id} magnitude={self.magnitude}>"
+
+
+class Location(db.Model):
+    """Storing location of user from Google Maps API."""
+
+    __tablename__ = "locations"
+
+    location_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    lat = db.Column(db.Float, nullable=True)
+    lng = db.Column(db.Float, nullable=True)
+    address = db.Column(db.String(250), nullable=True)
+
+
+    user = db.relationship("User",
+                            backref="locations")
+
+
+    def __repr__(self):
+
+        return f"<ID={self.location_id} user_id={self.user_id} lat={self.lat} long={self.lng} address={self.address}"
 
 
 #####################################################################

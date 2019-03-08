@@ -18,7 +18,7 @@ function initMap() {
         lng: position.coords.longitude
       };
       // Send user's location into server alert route
-      $.get('/alerts', pos, (results) => {
+      $.get('/locations', pos, (results) => {
         console.log(typeof(pos));
       });
 

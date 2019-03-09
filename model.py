@@ -71,8 +71,13 @@ class User(db.Model):
 
     def create_message(self, natural_disaster):
 
-        message = Alert(message = f"Earthquake: {natural_disaster.title} near {self.name} the persons location is: {self.locations[-1].address}. {self.name} location coordinates (lat,lng): ({self.locations[-1].lat},{self.locations[-1].lat}) | Age: {self.age} | Medications: {self.medications} | Allergies: {self.allergies}.")
-
+        alert = Alert(nat_id=natural_disaster.nat_id,
+                      user_id=self.user_id,
+                      message=f"{natural_disaster.nat_type}: {natural_disaster.title} near {self.name} the persons location is: {self.locations[-1].address}. {self.name} location coordinates (lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) | Age: {self.age} | Medications: {self.medications} | Allergies: {self.allergies}."
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
 
 
 class Contact(db.Model):

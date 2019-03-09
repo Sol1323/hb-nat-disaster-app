@@ -8,7 +8,7 @@ from geopy import distance
 from twilio.rest import Client
 from flask import flash
 # from flask import Flask, render_template, request, flash, redirect, session, jsonify
-from model import NaturalDisaster, Earthquake, User
+from model import NaturalDisaster, Earthquake, User, Location, db
 
 #Get twilio account sid, auth token, phone number for sms and test phones
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
@@ -88,55 +88,14 @@ def create_earthquake_for_db(feed, idx=0):
     return earthquake
 
 
-def get_new_earthquake(level, period):
-    """Get most recent earthquake object"""
-
-    new_earthquake = None
-
-    last_feed = get_all_earthquakes(level, period) #Quake feed object
-    print("Last feed element zero is: ", last_feed[0])
-    new_feed = get_all_earthquakes(level, period)
-
-
-    if last_feed:
-        last_feed_time = get_ms_time(last_feed, 0)
-        new_feed_time = get_ms_time(new_feed, 0)
-
-        while last_feed_time == new_feed_time:
-            #until they are not equal keep requesting
-            new_feed = get_all_earthquakes(level, period)
-            new_feed_time = get_ms_time(new_feed, 0)
-
-
-        #once new feed is different we will output new_earthquake
-        new_earthquake_feed = new_feed
-        eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-
-        print("New earthquake is: ", new_earthquake_feed.event(0))
-        print("New earthquake time: ", new_feed.event_time(0))
-
-        is_near = calculate_distance(user_location, eq_location)
-
-        if is_near:
-            send_sms(TEST_PHONE)
-
-        # return new_earthquake_feed # type: QuakeFeed obj
-
-        #TODO: refactor code to be able to grab multiple new earthquake []
-        # then append to list all the new_earthquakes
-        # save_quake_into_db(new_earthquake_feed)
-
-
 def calculate_distance(user_location, eq_location):
 
     # Geopy can calculate geodesic distance between two points using the geodesic distance
     # https://pypi.org/project/geopy/
     diff_distance = distance.distance(user_location, eq_location).miles
 
-    if diff_distance > 400:
-        # eq = create_earthquake_for_db(feed)
-        # db.session.add(eq)
-        # db.session.commit()
+    if diff_distance < 400:
+
         return True
     #TODO:  instantiate alert and formulate the message
     # body = Alert(user, ca_eq, address, user_current_location)
@@ -149,7 +108,7 @@ def send_sms(contacts, user):
     # for contact in contacs:
     message = client.messages \
                     .create(
-                         body=f"{user.name} location is {user.locations[-1].lat} {user.locations[-1].lng}. The address is: {user.locations[-1].address} The person is in an earthquake.",
+                         body="This is the message",
                          from_=TWILIO_PHONE_NUMBER,
                          to=contacts #contact for testing just direct phone number
                      )
@@ -168,12 +127,6 @@ def get_new_earthquake(level, period):
     # print(session["user_id"])
 
     new_earthquake = None
-    # TEST WITH DATABASE EARTHQUAKE FROM CA
-    # ca_eq = NaturalDisaster.query.get(1)
-    # magnitude = ca_eq.earthquake.magnitude
-    # lat_test = float(ca_eq.latitude)
-    # lng_test = float(ca_eq.longitude)
-    # test_eq_coord = (lat_test, lng_test)
 
     last_feed = get_all_earthquakes(level, period) #Quake feed object
     print("Last feed element zero is: ", last_feed[0])
@@ -184,30 +137,50 @@ def get_new_earthquake(level, period):
         last_feed_time = get_ms_time(last_feed, 0)
         new_feed_time = get_ms_time(new_feed, 0)
 
+        #Until they are not equal keep requesting but last_feed will remain the same
         while last_feed_time == new_feed_time:
-            #until they are not equal keep requesting
             new_feed = get_all_earthquakes(level, period)
             new_feed_time = get_ms_time(new_feed, 0)
             # new_feed_time = "dsjifhdfh" for testing purposes
+            print("Last_feed request made is :", last_feed)
             print("new request made:", new_feed)
 
         new_earthquake_feed = new_feed
         eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-        #TODO: add query for getting all users locations
-        user = User.query.get(1)
+        #TODO: add query for getting all users location
+        user = User.query.get(3)
         user_location = None
+        # locations = Location.query.options(db.joinedload('user')).options(db.joinedload('contacts')).options(db.joinedload('phones')).all()
+        # locations = Location.query.options(db.joinedload(Location.user).joinedload(User.contacts)).all()
+        #This one works
+        locations = Location.query.options(db.joinedload('user').joinedload('contacts').joinedload('phones')).all()
 
+        # locations = Location.query.all()
 
-        if user.locations:
-            user_location = (user.locations[-1].lat, user.locations[-1].lng)
-            user_contacts = None #TODO: Need to get all contact numbers but for testing only using test phone
+        # TEST WITH DATABASE EARTHQUAKE FROM CA
+        ca_eq = NaturalDisaster.query.get(1)
+        magnitude = ca_eq.earthquake.magnitude
+        lat_test = float(ca_eq.latitude)
+        lng_test = float(ca_eq.longitude)
+        test_eq_coord = (lat_test, lng_test)
+
+        for location in locations:
+            print("it passed the location iteration ")
+            user_location = (location.lat, location.lng)
 
             is_near = calculate_distance(user_location, test_eq_coord)
 
+
             if is_near:
-                user.create_message(ca_eq)
+
+                user_contacts = None #TODO: Need to get all contact numbers but for testing only using test phone
+                # body = user.create_message(ca_eq)
                 print("is passing is near condition?")
                 send_sms(TEST_PHONE, user) #TODO: ADD PARAM THAT PASSES IN ALL USER INFO and address
+
+    # eq = create_earthquake_for_db(feed)
+    # db.session.add(eq)
+    # db.session.commit()
 
     #once new feed is different we will output new_earthquake
     # new_earthquake_feed = new_feed

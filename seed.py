@@ -5,6 +5,7 @@ import os
 
 
 TEST_PHONE = os.environ.get('TEST_PHONE')
+TEST_PHONE2 = os.environ.get('TEST_PHONE2')
 #TODO: Add a second verified number to be able to test
 
 #CREATE USERS
@@ -38,10 +39,10 @@ user_juan.locations.append(location2)
 
 #CREATE PHONES
 home_jesus = Phone(phone=TEST_PHONE, type="home")
-cel_jesus = Phone(phone=TEST_PHONE, type="cel")
+cel_jesus = Phone(phone=TEST_PHONE2, type="cel")
 
 cel_nati = Phone(phone=TEST_PHONE, type="cel")
-home_nati = Phone(phone=TEST_PHONE, type="home")
+home_nati = Phone(phone=TEST_PHONE2, type="home")
 
 
 #CREATE CONTACTS

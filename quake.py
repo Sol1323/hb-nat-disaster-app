@@ -6,9 +6,10 @@ import os
 # from twilio.rest import Client
 from geopy import distance
 from twilio.rest import Client
-from flask import flash
+# from flask import flash
 # from flask import Flask, render_template, request, flash, redirect, session, jsonify
-from model import NaturalDisaster, Earthquake, User, Location, db
+from model import NaturalDisaster, Earthquake, User, Location, db, connect_to_db
+
 
 #Get twilio account sid, auth token, phone number for sms and test phones
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
@@ -17,13 +18,16 @@ TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
 TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
 TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
 TEST_PHONE = os.environ.get('TEST_PHONE')
+TEST_FROM_PHONE = os.environ.get('TEST_FROM_PHONE')
 
 # Account SID and Auth Token for twilio
-client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+client = Client(TWILIO_TEST_SID, TWILIO_TEST_TOKEN)
+# client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+
 
 ALLOWED_LEVELS  = { "significant", "4.5", "2.5", "1.0", "all" }
 ALLOWED_PERIODS = { "hour", "day", "week", "month" }
-
 
 
 def get_all_earthquakes(level, period):
@@ -52,7 +56,7 @@ def get_coords(feed, idx):
     return (lat, lng)
 
 
-def create_earthquake_for_db(feed, idx=0):
+def add_earthquake_to_db(feed, idx=0):
     """Save earthquake into database using feed methods to get data"""
 
     nat_type = "earthquake"
@@ -85,7 +89,10 @@ def create_earthquake_for_db(feed, idx=0):
 
     earthquake.natural_disaster = nat_disaster
 
-    return earthquake
+    db.session.add(nat_disaster)
+    db.session.commit()
+
+    return nat_disaster
 
 
 def calculate_distance(user_location, eq_location):
@@ -104,27 +111,30 @@ def calculate_distance(user_location, eq_location):
     #when committing to db make sure is not the same eq as before, make sure is not already in db
 
 
-def send_sms(contacts, user):
+def send_sms(phone, user, body):
     # for contact in contacs:
     message = client.messages \
                     .create(
-                         body="This is the message",
-                         from_=TWILIO_PHONE_NUMBER,
-                         to=contacts #contact for testing just direct phone number
+                         body=body,
+                         from_=TEST_FROM_PHONE,
+                         to=phone #contact for testing just direct phone number
                      )
-    #Save message into db
-    # db.session.add(body)
-    # db.session.commit()
 
-    #TODO: Modify to alert multiple phone numbers
-    # contacts = user.contacts
-    flash(f"Alert message sent to your contacts.")
+    # flash(f"Alert message sent to your contacts.")
+    print("\n\n\n")
     print("This is the message sid:",message.sid)
+    print("\n\n\n")
+
 
 def get_new_earthquake(level, period):
     """Get most recent earthquake object"""
 
-    # print(session["user_id"])
+    #TEST WITH DATABASE EARTHQUAKE FROM CA
+    ca_eq = NaturalDisaster.query.get(1)
+    magnitude = ca_eq.earthquake.magnitude
+    lat_test = float(ca_eq.latitude)
+    lng_test = float(ca_eq.longitude)
+    test_eq_coord = (lat_test, lng_test)
 
     new_earthquake = None
 
@@ -141,77 +151,51 @@ def get_new_earthquake(level, period):
         while last_feed_time == new_feed_time:
             new_feed = get_all_earthquakes(level, period)
             new_feed_time = get_ms_time(new_feed, 0)
-            # new_feed_time = "dsjifhdfh" for testing purposes
-            print("Last_feed request made is :", last_feed)
+            new_feed_time = "dsjifhdfh"
+            print("last feed request made:", last_feed)
             print("new request made:", new_feed)
 
+        #Get new_earthquake in the new_feed request
         new_earthquake_feed = new_feed
         eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-        #TODO: add query for getting all users location
-        user = User.query.get(3)
-        user_location = None
-        # locations = Location.query.options(db.joinedload('user')).options(db.joinedload('contacts')).options(db.joinedload('phones')).all()
-        # locations = Location.query.options(db.joinedload(Location.user).joinedload(User.contacts)).all()
-        #This one works
-        locations = Location.query.options(db.joinedload('user').joinedload('contacts').joinedload('phones')).all()
 
-        # locations = Location.query.all()
+        #Make a query with joinedload to not have lazyloading
+        locations = Location.query.options(db.joinedload('user')
+                                             .joinedload('contacts')
+                                             .joinedload('phones')).all()
 
-        # TEST WITH DATABASE EARTHQUAKE FROM CA
-        ca_eq = NaturalDisaster.query.get(1)
-        magnitude = ca_eq.earthquake.magnitude
-        lat_test = float(ca_eq.latitude)
-        lng_test = float(ca_eq.longitude)
-        test_eq_coord = (lat_test, lng_test)
-
+        #Iterate over all locations to see if there is someone close to the new_earthquake
         for location in locations:
-            print("it passed the location iteration ")
+
             user_location = (location.lat, location.lng)
 
-            is_near = calculate_distance(user_location, test_eq_coord)
+            #Calculate geodesic distance between both user and new_earthquake location
+            is_near = calculate_distance(user_location, test_eq_coord) #change to test_eq_coord for testing
 
-
+            #Check if it is near to send sms
             if is_near:
+                #Get user & user contacts
+                user = location.user
+                user_contacts = user.contacts
+                #Save the earthquake into db
+                natural_disaster = add_earthquake_to_db(new_earthquake_feed)
 
-                user_contacts = None #TODO: Need to get all contact numbers but for testing only using test phone
-                # body = user.create_message(ca_eq)
-                print("is passing is near condition?")
-                send_sms(TEST_PHONE, user) #TODO: ADD PARAM THAT PASSES IN ALL USER INFO and address
+                #Iterate over all contacts to get all phones
+                for contact in user_contacts:
+                    #Get all phones of the contact
+                    phones = contact.phones #type:[]
+                    #Iterate over the phones to send sms
+                    for phone in phones:
+                        body = user.create_message(ca_eq) #change to ca_eq for testing
+                        phone = phone.phone
 
-    # eq = create_earthquake_for_db(feed)
-    # db.session.add(eq)
-    # db.session.commit()
+                        send_sms(phone, user, body)
 
-    #once new feed is different we will output new_earthquake
-    # new_earthquake_feed = new_feed
-    # eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-    #
-    # print("New earthquake is: ", new_earthquake_feed.event(0))
-    # print("New earthquake time: ", new_feed.event_time(0))
 
-    #QUERY DB USING USER_ID TO GET USER OBJECT
-    #REAL DATA
-    # user_id = session['user_id']
-    # user = User.query.get(user_id)
 
-    #COORDINATES
-    # lat = session['lat']
-    # lng = session['lng']
-    # user_location = (lat, lng)
-
-    #Make it a readable address
-    # if lat:
-    #     result = gmaps.reverse_geocode(latlng=(lat, lng))
-    #     address = result[0]['formatted_address']
-    #
-    # print("\n\n\n")
-    # print("USER_ID:", user_id)
-    # print("LAT:", lat)
-    # print("LNG:", lng)
-
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #
-#
+    connect_to_db(app)
 #     # schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
 #     #
 #     schedule.run_continuously(1)

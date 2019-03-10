@@ -32,7 +32,7 @@ GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 # TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
 # TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
 # TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
-TEST_PHONE = os.environ.get('TEST_PHONE')
+# TEST_PHONE = os.environ.get('TEST_PHONE')
 #
 # # Account SID and Auth Token for twilio
 # client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)

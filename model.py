@@ -73,11 +73,13 @@ class User(db.Model):
 
         alert = Alert(nat_id=natural_disaster.nat_id,
                       user_id=self.user_id,
-                      message=f"{natural_disaster.nat_type}: {natural_disaster.title} near {self.name} the persons location is: {self.locations[-1].address}. {self.name} location coordinates (lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) | Age: {self.age} | Medications: {self.medications} | Allergies: {self.allergies}."
+                      message=f"\n{self.name} location is: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n \n {natural_disaster.title} taking event at this moment."
                      )
         alert.user = self
         db.session.add(alert)
         db.session.commit()
+
+        return alert.message
 
 
 class Contact(db.Model):
@@ -248,7 +250,7 @@ class NaturalDisaster(db.Model):
     timestamp = db.Column(db.DateTime)
 
     earthquake = db.relationship('Earthquake',
-                                    uselist=False)
+                                 uselist=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""

@@ -10,10 +10,10 @@ TEST_PHONE2 = os.environ.get('TEST_PHONE2')
 
 #CREATE USERS
 user_fabio = User(name="Fabio", age=45, email="f@email.com", password="123", residency_address="599 Manor St. Villa Rica, GA 30180", zipcode="30180",
-            phone="14156783456", allergies="Penicillin, lactose, dogs", medications="Metformin, Amlodipine")
+            phone=TEST_PHONE, allergies="Penicillin, lactose, dogs", medications="Metformin, Amlodipine")
 
 user_juan = User(name="Juan", age=26, email="j@email.com", password="456", residency_address="155 Valley View Court Roslindale, MA", zipcode="02131",
-            phone="14155389463", allergies="Aspirin, seafood, nuts, cats", medications="Lipitor, Lisinopril")
+            phone=TEST_PHONE2, allergies="Aspirin, seafood, nuts, cats", medications="Lipitor, Lisinopril")
 
 #CREATE SETTINGS
 eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
@@ -39,9 +39,9 @@ user_juan.locations.append(location2)
 
 #CREATE PHONES
 home_jesus = Phone(phone=TEST_PHONE, type="home")
-cel_jesus = Phone(phone=TEST_PHONE2, type="cel")
+cel_jesus = Phone(phone=TEST_PHONE, type="cel")
 
-cel_nati = Phone(phone=TEST_PHONE, type="cel")
+cel_nati = Phone(phone=TEST_PHONE2, type="cel")
 home_nati = Phone(phone=TEST_PHONE2, type="home")
 
 

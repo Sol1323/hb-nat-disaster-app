@@ -8,7 +8,7 @@ from geopy import distance
 from twilio.rest import Client
 # from flask import flash
 # from flask import Flask, render_template, request, flash, redirect, session, jsonify
-from model import NaturalDisaster, Earthquake, User, Location, db, connect_to_db
+from model import NaturalDisaster, Earthquake, User, Location, UserSetting, db, connect_to_db
 
 
 #Get twilio account sid, auth token, phone number for sms and test phones
@@ -59,7 +59,7 @@ def get_coords(feed, idx):
 def add_earthquake_to_db(feed, idx=0):
     """Save earthquake into database using feed methods to get data"""
 
-    nat_type = "earthquake"
+    nat_type = "Earthquake"
     title = feed.event_title(idx) #Ex. 'USGS Magnitude 4.5+ Earthquakes, Past Day'
 
     #Get magnitude of the earthquake
@@ -104,27 +104,29 @@ def calculate_distance(user_location, eq_location):
     if diff_distance < 400:
 
         return True
-    #TODO:  instantiate alert and formulate the message
-    # body = Alert(user, ca_eq, address, user_current_location)
-    # If user.setting is 4.5 or higher then it can be felt from far away < 400
-    # If user.setting is lower than 4.5 then it can be felt from closer distance 100
-    #when committing to db make sure is not the same eq as before, make sure is not already in db
 
+    # If user.user_settings is 4.5 or higher then it can be felt from far away < 400
+    # If user.user_settings is lower than 4.5 then it can be felt from closer distance 100
+    #Make a query of all settings with joinedload to not have lazyloading
+    # settings = UserSetting.query.options(db.joinedload('user')).all()
+
+    #TODO: Get all users that match eq mag
+    # for setting in settings:
+    #     user_value = float(setting.user_value)
+    #     if magnitude >= user_value:
 
 def send_sms(phone, user, body):
     # for contact in contacs:
     message = client.messages \
                     .create(
                          body=body,
-                         from_=TEST_FROM_PHONE,
+                         from_=TEST_FROM_PHONE, #change to TEST_FROM_PHONE
                          to=phone #contact for testing just direct phone number
                      )
 
-    # flash(f"Alert message sent to your contacts.")
     print("\n\n\n")
     print("This is the message sid:",message.sid)
     print("\n\n\n")
-
 
 def get_new_earthquake(level, period):
     """Get most recent earthquake object"""
@@ -151,15 +153,15 @@ def get_new_earthquake(level, period):
         while last_feed_time == new_feed_time:
             new_feed = get_all_earthquakes(level, period)
             new_feed_time = get_ms_time(new_feed, 0)
-            new_feed_time = "dsjifhdfh"
-            print("last feed request made:", last_feed)
+            # new_feed_time = "dsjifhdfh" for testing feed
+            print("last feed made:", last_feed)
             print("new request made:", new_feed)
 
         #Get new_earthquake in the new_feed request
         new_earthquake_feed = new_feed
         eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-
-        #Make a query with joinedload to not have lazyloading
+        magnitude = new_earthquake_feed.magnitude(0)
+        #Make a query of all locations with joinedload to not have lazyloading
         locations = Location.query.options(db.joinedload('user')
                                              .joinedload('contacts')
                                              .joinedload('phones')).all()
@@ -170,7 +172,7 @@ def get_new_earthquake(level, period):
             user_location = (location.lat, location.lng)
 
             #Calculate geodesic distance between both user and new_earthquake location
-            is_near = calculate_distance(user_location, test_eq_coord) #change to test_eq_coord for testing
+            is_near = calculate_distance(user_location, eq_location) #change to test_eq_coord for testing
 
             #Check if it is near to send sms
             if is_near:
@@ -186,11 +188,14 @@ def get_new_earthquake(level, period):
                     phones = contact.phones #type:[]
                     #Iterate over the phones to send sms
                     for phone in phones:
-                        body = user.create_message(ca_eq) #change to ca_eq for testing
+                        body = user.create_message(natural_disaster) #change to ca_eq for testing
                         phone = phone.phone
 
                         send_sms(phone, user, body)
-
+                #Send a confirmation to user that a message has been sent to all of his contacts and of the event
+                body = user.create_confirmation_message(natural_disaster)
+                phone = user.phone
+                send_sms(phone, user, body)
 
 
 if __name__ == '__main__':

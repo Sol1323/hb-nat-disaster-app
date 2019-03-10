@@ -37,7 +37,6 @@ $('#add-contact-form').on('submit', (evt) => {
     $('.user-contacts').append(`
                               <a href="/contacts/${contact.contact_id}"> ${contact.name} </a>
                               <li>${contact.phone[0].type}: ${contact.phone[0].phone}</li>
-                              <button type="button" class="edit-contact-button" id="{{ contact.contact_id }}">Edit</button>
                               `
                               );
     $('#add-contact-form').each(function(){

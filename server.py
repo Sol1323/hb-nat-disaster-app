@@ -285,9 +285,6 @@ def create_alerts():
     lat = request.args.get('lat')
     lng = request.args.get('lng')
 
-    # session['lat'] = lat
-    # session['lng'] = lng
-
     result = gmaps.reverse_geocode(latlng=(lat, lng))
     address = result[0]['formatted_address']
 
@@ -295,78 +292,21 @@ def create_alerts():
 
 
     return redirect(f'/users/{user_id}')
-#
-#     # eq = create_earthquake_for_db(feed)
-#     # db.session.add(eq)
-#     # db.session.commit()
-#
-#
-#
-#     return redirect(f'/users/{user.user_id}')
-    # return str(response)
 
-#REAL DATA
-# user_id = session['user_id']
-#
-# lat = request.args.get('lat')
-# lng = request.args.get('lng')
-# print(user_id)
-#
-# #COORDINATES
-# user_location = (lat, lng)
+@app.route('/tests', methods=['POST'])
+def create_test():
+    """Create an sms to test and invite user's contacts."""
 
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    phone = user.phone
+    body = user.create_test_message()
 
+    send_sms(phone, user, body)
 
-# print("\n\n\n")
-# print("LAT", lat)
-# print("LNG", lng)
-# print("address", address)
-# print("feed:", feed)
-# print("test coordinates:", test_eq_coord)
-# print("test distance diff:", test_distance)
+    flash(f"Message sent to your phone.")
 
-
-# def get_new_earthquake(level, period):
-#     """Get most recent earthquake object"""
-#
-#     new_earthquake = None
-#
-#     #Instantiate two QuakeFeed objects that contain the same feed
-#     last_feed = get_all_earthquakes(level, period) #Quake feed object
-#     print("Last feed element zero is: ", last_feed[0])
-#     new_feed = get_all_earthquakes(level, period)
-#
-#
-#     if last_feed:
-#         last_feed_time = get_ms_time(last_feed, 0)
-#         new_feed_time = get_ms_time(new_feed, 0)
-#
-#         #Until they are not equal keep requesting but last_feed will remain the same
-#         while last_feed_time == new_feed_time:
-#             new_feed = get_all_earthquakes(level, period)
-#             new_feed_time = get_ms_time(new_feed, 0)
-#             print("New feed request made in my while loop:", new_feed)
-#
-#
-#         #once new feed is different we will output new_earthquake
-#         new_earthquake_feed = new_feed
-#         eq_location = get_coords(new_earthquake_feed, 0) #(lat,lng)
-#
-#         print("New earthquake is: ", new_earthquake_feed.event(0))
-#         print("New earthquake time: ", new_feed.event_time(0))
-#
-#
-#         is_near = calculate_distance(user_location, eq_location)
-#
-#         if is_near:
-#             send_sms(TEST_PHONE)
-
-        # return new_earthquake_feed # type: QuakeFeed obj
-
-        #TODO: refactor code to be able to grab multiple new earthquake []
-        # then append to list all the new_earthquakes
-        # save_quake_into_db(new_earthquake_feed)
-
+    return redirect(f'/users/{user_id}')
 
 
 

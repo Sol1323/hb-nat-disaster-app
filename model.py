@@ -73,7 +73,30 @@ class User(db.Model):
 
         alert = Alert(nat_id=natural_disaster.nat_id,
                       user_id=self.user_id,
-                      message=f"\n{self.name} location is: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n \n {natural_disaster.title} taking event at this moment."
+                      message=f"\n AlertIn:\n {self.name} location is: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n\n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n\n {natural_disaster.nat_type}: {natural_disaster.title} taking event at this moment."
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
+
+        return alert.message
+
+    def create_test_message(self):
+
+        alert = Alert(user_id=self.user_id,
+                      message=f"\n Welcome to AlertIn {self.name}!"
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
+
+        return alert.message
+
+    def create_confirmation_message(self, natural_disaster):
+
+        alert = Alert(nat_id=natural_disaster.nat_id,
+                      user_id=self.user_id,
+                      message=f"\n AlertIn: The following message has been sent to your contacts: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n \n {natural_disaster.title} taking event at this moment."
                      )
         alert.user = self
         db.session.add(alert)
@@ -171,6 +194,11 @@ class Setting(db.Model):
         self.setting_code = setting_code
         self.title = title
 
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Setting title={self.title} setting_code={self.setting_code}>"
+
 
 class UserSetting(db.Model):
     """User setting in alert system"""
@@ -203,6 +231,11 @@ class UserSetting(db.Model):
         }
 
         return user_setting_dict
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<UserSetting user_value={self.user_value} setting_code={self.setting_code}>"
 
 
 class Alert(db.Model):

@@ -260,7 +260,7 @@ def update_setting(setting_code):
     # setting = Setting.query.get("eqmag")
     # eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
 
-    user_id = session.get("user_id")
+    user_id = session['user_id']
 
     # eq_mag_setting = Setting(setting_code, "Earthquake magnitude alert level")
     new_setting = UserSetting(user_value=magnitude, user_id=user_id, setting_code=setting_code)
@@ -271,7 +271,7 @@ def update_setting(setting_code):
 
     flash(f"Setting added.")
 
-    return jsonify(new_setting.convert_to_dict())
+    return redirect(f'/users/{user_id}')
 
 
 #----------------------------ALERT ROUTES---------------------------------------

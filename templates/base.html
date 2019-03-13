@@ -91,8 +91,12 @@
                             </li>
                             <!-- End Pages -->
                             <li class="s-header-v2__nav-item"><a href="contacts.html" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
-                            <li class="s-header-v2__nav-item"><a href="services.html" class="s-header-v2__nav-link">Log In</a></li>
-                            <li class="s-header-v2__nav-item"><a href="about.html" class="s-header-v2__nav-link">Sign Up</a></li>
+                            {% if "user_id" in session %}
+                              <li class="s-header-v2__nav-item"><a href="/logout" class="s-header-v2__nav-link">Logout</a></li>
+                            {% else %}
+                              <li class="s-header-v2__nav-item"><a href="/signup" class="s-header-v2__nav-link">Sign Up</a></li>
+                              <li class="s-header-v2__nav-item"><a href="services.html" class="s-header-v2__nav-link">Log In</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                     <!-- End Nav Menu -->

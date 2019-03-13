@@ -1,5 +1,99 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="g-bg-color--sky-light">
+          <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+<div class="g-text-center--xs g-margin-b-80--xs">
+                    <p class="text-uppercase g-font-size-14--xs g-font-weight--700 g-color--primary g-letter-spacing--2 g-margin-b-25--xs"></p>
+                    <h2 class="g-font-size-32--xs g-font-size-36--md">{{ user.name }} Profile</h2>
+                </div>
+                </div>
+                </div>
+<!-- Features -->
+<div class="g-hor-divider__solid--sky-light">
+    <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+        <div class="row g-margin-b-60--xs g-margin-b-70--md">
+            <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Email:</h3>
+                        <p class="g-font-size-18--sm">{{ user.email }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+            <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Residency Address:</h3>
+                        <p class="g-font-size-18--sm">{{ user.residency_address }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+            <div class="col-sm-4">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Zipcode:</h3>
+                        <p class="g-font-size-18--sm">{{ user.zipcode }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+        </div>
+
+        <div class="row g-margin-b-60--xs g-margin-b-70--md">
+            <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Allergies:</h3>
+                        <p class="g-font-size-18--sm">{{ user.allergies }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+            <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Medications:</h3>
+                        <p class="g-font-size-18--sm">{{ user.medications }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+            <div class="col-sm-4">
+                <!-- Media -->
+                <div class="clearfix">
+                    <div class="g-media__body g-padding-x-20--xs">
+                        <h3 class="g-font-size-18--xs g-margin-b-10--xs">Phone:</h3>
+                        <p class="g-font-size-18--sm">{{ user.phone }}</p>
+                    </div>
+                    <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+                </div>
+                <!-- End Media -->
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- End Features -->
+
+
+
+
+
+
 
   <div id="show-user-info">
     <h1>{{ user.name }}</h1>
@@ -127,6 +221,6 @@
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
 </script>
-<script src="/static/js/maps.js"></script>
+
 
 {% endblock %}

@@ -139,7 +139,7 @@ def user_profile(user_id):
 
     if request.method == 'GET':
 
-        return render_template('user.html', user=user, GOOGLE_KEY=GOOGLE_KEY)
+        return render_template('user.html', user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -277,21 +277,23 @@ def update_setting(setting_code):
 #----------------------------ALERT ROUTES---------------------------------------
 
 @app.route('/locations')
-def create_alerts():
-    """Create an sms alert to user's contacts."""
+def get_user_location():
+    """Get user location and save it into db"""
 
     user_id = session['user_id']
     user = User.query.get(user_id)
     lat = request.args.get('lat')
     lng = request.args.get('lng')
 
-    result = gmaps.reverse_geocode(latlng=(lat, lng))
-    address = result[0]['formatted_address']
+    if lat:
+        result = gmaps.reverse_geocode(latlng=(lat, lng))
+        address = result[0]['formatted_address']
 
-    user.add_location(lat, lng, address)
+        user.add_location(lat, lng, address)
 
 
-    return redirect(f'/users/{user_id}')
+    return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY)
+
 
 @app.route('/tests', methods=['POST'])
 def create_test():
@@ -313,10 +315,10 @@ def create_test():
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
+    # schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    schedule.run_continuously(1)
+    # schedule.run_continuously(1)
     app.run(host='0.0.0.0')

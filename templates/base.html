@@ -1,28 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>NatAlert</title>
-<link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
+  <head>
+      <!-- Basic -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      <title>AlertIn</title>
+      <meta name="keywords" content="Flask JQuery Bootstrap QuakeFeed Twilio Alert System" />
+      <meta name="description" content="AlertIn App">
+      <meta name="author" content="Sol Beniquez">
 
-{% if "user_id" in session %}
-  <a href="/logout">Logout</a>
-{% else %}
-  <a href="/signup">SignUp</a>
-  <a href="/login">Login</a>
-{% endif %}
+      <!-- Web Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i|Montserrat:400,700" rel="stylesheet">
 
-<hr>
+      <!-- Vendor Styles -->
+      <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/css/animate.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/vendor/themify/themify.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/vendor/scrollbar/scrollbar.min.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/vendor/swiper/swiper.min.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/vendor/cubeportfolio/css/cubeportfolio.min.css" rel="stylesheet" type="text/css"/>
 
-{% for flash in get_flashed_messages() %}
-  {{ flash }}
-{% endfor %}
+      <!-- Theme Styles -->
+      <!-- <link rel="stylesheet" href="/static/css/style.css"> -->
+      <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
+      <link href="/static/css/global/global.css" rel="stylesheet" type="text/css"/>
 
-{% block content %}
-  Block content here.
-{% endblock %}
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="/static/js/main.js"></script>
-</body>
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon">
+      <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+  </head>
+  <body>
+
+    {% if "user_id" in session %}
+      <a href="/logout">Logout</a>
+    {% else %}
+      <a href="/signup">SignUp</a>
+      <a href="/login">Login</a>
+    {% endif %}
+
+    <hr>
+
+    {% for flash in get_flashed_messages() %}
+      {{ flash }}
+    {% endfor %}
+
+    {% block content %}
+      Block content here.
+    {% endblock %}
+
+
+    <footer class="container">
+           Made with <i class="fa fa-heart"></i> by <a href="https://github.com/Sol1323">Sol</a><a href="https://hackbrightacademy.com/">@Hackbright</a>.
+    </footer>
+
+    <!-- Back To Top -->
+    <a href="javascript:void(0);" class="s-back-to-top js__back-to-top"></a>
+
+    <!--========== JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) ==========-->
+    <!-- Vendor -->
+    <script type="text/javascript" src="/static/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.migrate.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.smooth-scroll.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.back-to-top.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/scrollbar/jquery.scrollbar.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/vidbg.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/swiper/swiper.jquery.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/cubeportfolio/js/jquery.cubeportfolio.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/jquery.wow.min.js"></script>
+
+    <!-- General Components and Settings -->
+    <script type="text/javascript" src="/static/js/global.min.js"></script>
+    <script type="text/javascript" src="/static/js/components/header-sticky.min.js"></script>
+    <script type="text/javascript" src="/static/js/components/scrollbar.min.js"></script>
+    <script type="text/javascript" src="/static/js/components/swiper.min.js"></script>
+    <script type="text/javascript" src="/static/js/components/portfolio-4-col-slider.min.js"></script>
+    <script type="text/javascript" src="/static/js/components/wow.min.js"></script>
+
+    <!-- My Overriding Settings -->
+    <script src="/static/js/main.js"></script>
+    <!--========== END JAVASCRIPTS ==========-->
+
+  </body>
 </html>

@@ -16,7 +16,9 @@ db = SQLAlchemy()
 class User(db.Model):
     """User of natural disaster alerts system"""
 
-    __tablename__ = "users"
+    __tablename__ = 'users'
+    # TODO: refactor with _json_attrs
+    # _json_attrs = ['email', 'password', 'name', 'age']
 
     user_id = db.Column(db.Integer,
                         autoincrement=True,
@@ -32,31 +34,75 @@ class User(db.Model):
     phone = db.Column(db.String(64), nullable=True)
 
 
-
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return f"<User user_id={self.user_id} name={self.name} email={self.email}>"
 
     def convert_to_dict(self):
-        """Convert user into a dictoniary"""
+        """Convert user into a dictionary"""
 
-        user_dict = {}
-        user_dict["user_id"] = self.user_id
-        user_dict["email"] = self.email
-        user_dict["password"] = self.password
-        user_dict["name"] = self.name
-        user_dict["age"] = self.age
-        user_dict["residency_address"] = self.residency_address
-        user_dict["zipcode"] = self.zipcode
-        user_dict["allergies"] = self.allergies
-        user_dict["medications"] = self.medications
-        user_dict["phone"] = self.phone
-        #TODO: refactor according to relationship
-        #TODO: refactor input attribute inside of dictionary. More DRY.
-        # "user_settings" = self.user_settings
+        #TODO: refactor to getattr(user, attr)
+        # for attr in _json_attrs:
+        #     user_dict[attr] = self.attr
+        #
+        # return user_dict
 
+        user_dict = {
+            'user_id': self.user_id,
+            'email': self.email,
+            'password': self.password,
+            'name': self.name,
+            'age': self.age,
+            'residency_address': self.residency_address,
+            'zipcode' : self.zipcode,
+            'allergies': self.allergies,
+            'medications': self.medications,
+            'phone': self.phone
+        }
         return user_dict
+
+    def add_location(self, lat, lng, address):
+        location = Location(lat=lat, lng=lng, address=address)
+        self.locations.append(location)
+
+        db.session.add(self)
+        db.session.commit()
+
+    def create_message(self, natural_disaster):
+
+        alert = Alert(nat_id=natural_disaster.nat_id,
+                      user_id=self.user_id,
+                      message=f"\n AlertIn:\n {self.name} location is: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n\n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n\n {natural_disaster.nat_type}: {natural_disaster.title} taking event at this moment."
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
+
+        return alert.message
+
+    def create_test_message(self):
+
+        alert = Alert(user_id=self.user_id,
+                      message=f"\n Welcome to AlertIn {self.name}!"
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
+
+        return alert.message
+
+    def create_confirmation_message(self, natural_disaster):
+
+        alert = Alert(nat_id=natural_disaster.nat_id,
+                      user_id=self.user_id,
+                      message=f"\n AlertIn: The following message has been sent to your contacts: {self.locations[-1].address}.\n Coordinates(lat,lng): ({self.locations[-1].lat},{self.locations[-1].lng}) \n Age: {self.age} \n Medications: {self.medications} \n Allergies: {self.allergies} \n \n {natural_disaster.title} taking event at this moment."
+                     )
+        alert.user = self
+        db.session.add(alert)
+        db.session.commit()
+
+        return alert.message
 
 
 class Contact(db.Model):
@@ -65,10 +111,10 @@ class Contact(db.Model):
     __tablename__ = "contacts"
 
     contact_id = db.Column(db.Integer,
-                         autoincrement=True,
-                         primary_key=True)
+                           autoincrement=True,
+                           primary_key=True)
     user_id = db.Column(db.Integer,
-                         db.ForeignKey('users.user_id'))
+                        db.ForeignKey('users.user_id'))
     name = db.Column(db.String(64), nullable=True)
 
 
@@ -88,12 +134,18 @@ class Contact(db.Model):
     def convert_to_dict(self):
         """Convert contact into a dictionary"""
 
-        contact_dict = {}
-        contact_dict["contact_id"] = self.contact_id
-        contact_dict["name"] = self.name
-        contact_dict["user"] = self.user.name
-        contact_dict["phone"] = self.phones[-1].phone
-        contact_dict["type"] = self.phones[-1].type
+        phone_list = []
+
+        for phone in self.phones:
+            dict_phone = phone.convert_to_dict()
+            phone_list.append(dict_phone)
+
+        contact_dict = {
+            'contact_id': self.contact_id,
+            'name': self.name,
+            'user': self.user.name,
+            'phone': phone_list,
+        }
 
         return contact_dict
 
@@ -101,7 +153,7 @@ class Contact(db.Model):
 class Phone(db.Model):
     """Phone from contact for alert system"""
 
-    __tablename__ = "phones"
+    __tablename__ = 'phones'
 
     phone_id = db.Column(db.Integer,
                          autoincrement=True,
@@ -110,7 +162,18 @@ class Phone(db.Model):
     phone = db.Column(db.String(64), nullable=True)
     type = db.Column(db.String(64), nullable=True)
     contact_id = db.Column(db.Integer,
-                            db.ForeignKey("contacts.contact_id"))
+                            db.ForeignKey('contacts.contact_id'))
+
+    def convert_to_dict(self):
+
+        phone_dict = {
+            'phone_id': self.phone_id,
+            'phone': self.phone,
+            'type': self.type,
+            'contact_id': self.contact_id
+        }
+
+        return phone_dict
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -121,48 +184,64 @@ class Phone(db.Model):
 class Setting(db.Model):
     """Setting in alert system"""
 
-    __tablename__ = "settings"
+    __tablename__ = 'settings'
 
-    setting_id = db.Column(db.Integer,
-                         autoincrement=True,
-                         primary_key=True)
+    setting_code = db.Column(db.String(20), primary_key=True)
+    title = db.Column(db.String(150))
 
 
-    nat_type_id = db.Column(db.Integer,
-                         db.ForeignKey('nat_types.nat_type_id'))
+    def __init__(self, setting_code, title):
+        self.setting_code = setting_code
+        self.title = title
 
-    # #Define relationship to users
-    # user_settings = db.relationship("UserSetting")
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Setting title={self.title} setting_code={self.setting_code}>"
 
 
 class UserSetting(db.Model):
     """User setting in alert system"""
 
-    __tablename__ = "user_settings"
+    __tablename__ = 'user_settings'
 
     user_setting_id = db.Column(db.Integer,
                          autoincrement=True,
                          primary_key=True)
     user_id = db.Column(db.Integer,
                          db.ForeignKey('users.user_id'))
-    setting_id = db.Column(db.Integer,
-                         db.ForeignKey('settings.setting_id'))
-    user_setting = db.Column(db.String(250), nullable=True)
+    setting_code = db.Column(db.String,
+                         db.ForeignKey('settings.setting_code'))
+    user_value = db.Column(db.String(250), nullable=True)
 
     #Define relationship to user_settings
-    user = db.relationship("User",
-                            backref=db.backref("user_settings"))
+    user = db.relationship('User',
+                            backref=db.backref('user_settings'))
+    #Define relationship setting
+    setting = db.relationship('Setting')
 
-    #Define relationship to settings
-    setting = db.relationship("Setting",
-                                backref=db.backref("user_settings"))
+    def convert_to_dict(self):
+        """Convert user setting into a dictionary"""
 
+        user_setting_dict = {
+            'user_setting_id': self.user_setting_id,
+            'user_id': self.user_id,
+            'setting_code': self.setting_code,
+            'user_value': self.user_value,
+        }
+
+        return user_setting_dict
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<UserSetting user_value={self.user_value} setting_code={self.setting_code}>"
 
 
 class Alert(db.Model):
     """Alert contacts in alert system"""
 
-    __tablename__ = "alerts"
+    __tablename__ = 'alerts'
 
     alert_id = db.Column(db.Integer,
                          autoincrement=True,
@@ -174,19 +253,12 @@ class Alert(db.Model):
     message = db.Column(db.String(650), nullable=True)
 
     #Define relationship to natural disaster
-    natural_disaster = db.relationship("NaturalDisaster",
+    natural_disaster = db.relationship('NaturalDisaster',
                                         uselist=False)
 
     #Define relationship to users
-    user = db.relationship("User",
+    user = db.relationship('User',
                             uselist=False)
-
-    #TODO: Draft of init method. Watch how to instantiate a message using instance attibutes.
-    # def __init__(self, user, nat):  # Alert(juan, natural_disaster_1)
-    #     self.user = user
-    #     # etc
-    #
-    #     self.message = f"{user.medications}"
 
 
     def __repr__(self):
@@ -195,65 +267,41 @@ class Alert(db.Model):
         return f"<Alert alert_id={self.alert_id} user_id={self.user_id} nat_id={self.nat_id} message={self.message}>"
 
 
-class NatType(db.Model):
-    """Natural Disaster Type in alert system"""
-
-    __tablename__ = "nat_types"
-
-    nat_type_id = db.Column(db.Integer,
-                        autoincrement=True,
-                         primary_key=True)
-    nat_type = db.Column(db.String(250))
-
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<NatType nat_type_id={self.nat_type_id} nat_type={self.nat_type}>"
-
-
-
 class NaturalDisaster(db.Model):
     """Natural Disaster in alert system"""
 
-    __tablename__ = "natural_disasters"
+    __tablename__ = 'natural_disasters'
 
     nat_id = db.Column(db.Integer,
                         autoincrement=True,
                          primary_key=True)
-    nat_type_id = db.Column(db.Integer,
-                            db.ForeignKey("nat_types.nat_type_id"))
+    nat_type = db.Column(db.String(20))
     title = db.Column(db.String(350))
     latitude = db.Column(db.String(250))
     longitude = db.Column(db.String(250))
     location = db.Column(db.String(250))
     timestamp = db.Column(db.DateTime)
 
-    earthquake = db.relationship("Earthquake",
-                                    uselist=False)
-
-    #Define relationship to natural disaster type
-    nat_type = db.relationship("NatType",
-                                backref=db.backref("natural_disasters"))
-
+    earthquake = db.relationship('Earthquake',
+                                 uselist=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<NaturalDisaster nat_id={self.nat_id} location={self.location} timestamp={self.timestamp}>"
+        return f"<NaturalDisaster nat_id={self.nat_id} nat_type={self.nat_type} location={self.location} timestamp={self.timestamp}>"
 
 
 class Earthquake(db.Model):
     """Earthquake in alert system"""
 
-    __tablename__ = "earthquakes"
+    __tablename__ = 'earthquakes'
 
     nat_id = db.Column(db.Integer,
-                        db.ForeignKey("natural_disasters.nat_id"),
+                        db.ForeignKey('natural_disasters.nat_id'),
                          primary_key=True)
     magnitude = db.Column(db.Integer)
 
-    natural_disaster = db.relationship("NaturalDisaster",
+    natural_disaster = db.relationship('NaturalDisaster',
                                         uselist=False)
 
     def __repr__(self):
@@ -261,6 +309,26 @@ class Earthquake(db.Model):
 
         return f"<Earthquake nat_id={self.nat_id} magnitude={self.magnitude}>"
 
+
+class Location(db.Model):
+    """Storing location of user from Google Maps API."""
+
+    __tablename__ = "locations"
+
+    location_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    lat = db.Column(db.Float, nullable=True)
+    lng = db.Column(db.Float, nullable=True)
+    address = db.Column(db.String(250), nullable=True)
+
+
+    user = db.relationship("User",
+                            backref="locations")
+
+
+    def __repr__(self):
+
+        return f"<ID={self.location_id} user_id={self.user_id} lat={self.lat} long={self.lng} address={self.address}"
 
 
 #####################################################################
@@ -276,7 +344,7 @@ def connect_to_db(app):
     db.init_app(app)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # As a convenience, if we run this module interactively, it will
     # leave you in a state of being able to work with the database
     # directly.
@@ -284,4 +352,4 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     db.create_all()
-    print("Connected to DB.")
+    print('Connected to DB.')

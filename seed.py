@@ -1,27 +1,48 @@
-from model import User, Contact, Phone, Alert, NaturalDisaster, Earthquake, UserSetting, Setting, connect_to_db, db
+from model import User, Contact, Phone, Alert, NaturalDisaster, Location, Earthquake, UserSetting, Setting, connect_to_db, db
 from server import app
 
+import os
 
+
+TEST_PHONE = os.environ.get('TEST_PHONE')
+TEST_PHONE2 = os.environ.get('TEST_PHONE2')
+#TODO: Add a second verified number to be able to test
 
 #CREATE USERS
-user_fabio = User(name="Fabio", age=45, email="f@email.com", password="123",
-            phone="893829987", allergies="penicilina", medications="insulin")
+user_fabio = User(name="Fabio", age=45, email="f@email.com", password="123", residency_address="599 Manor St. Villa Rica, GA 30180", zipcode="30180",
+            phone=TEST_PHONE, allergies="Penicillin, lactose, dogs", medications="Metformin, Amlodipine")
 
-user_juan = User(name="Juan", age=26, email="j@email.com", password="456",
-            phone="12345678", allergies="seafood", medications="lorazepan")
+user_juan = User(name="Juan", age=26, email="j@email.com", password="456", residency_address="155 Valley View Court Roslindale, MA", zipcode="02131",
+            phone=TEST_PHONE2, allergies="Aspirin, seafood, nuts, cats", medications="Lipitor, Lisinopril")
 
 #CREATE SETTINGS
-earthquake_setting = UserSetting(user_setting="4.5")
-user_fabio.user_settings.append(earthquake_setting)
+eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
 
+fabio_mag_setting = UserSetting(setting=eq_mag_setting,
+                                user_value="4.5")
+
+juan_mag_setting = UserSetting(setting=eq_mag_setting,
+                                user_value="2.5")
+
+user_fabio.user_settings.append(fabio_mag_setting)
+
+user_juan.user_settings.append(juan_mag_setting)
+
+#CREATE LOCATION
+
+location1 = Location(lat=37.776460, lng=-122.228150, address="3098 E 10th St, Oakland, CA 94601")
+user_fabio.locations.append(location1)
+
+location2 = Location(lat=37.787970, lng=-122.418470, address="683 Sutter St, San Francisco, CA 94109")
+user_juan.locations.append(location2)
 
 
 #CREATE PHONES
-home_jesus = Phone(phone="1234567", type="home")
-cel_jesus = Phone(phone="13445654", type="cel")
+home_jesus = Phone(phone=TEST_PHONE, type="home")
+cel_jesus = Phone(phone=TEST_PHONE, type="cel")
 
-cel_nati = Phone(phone="3453546", type="cel")
-home_nati = Phone(phone="54657687", type="home")
+cel_nati = Phone(phone=TEST_PHONE2, type="cel")
+home_nati = Phone(phone=TEST_PHONE2, type="home")
 
 
 #CREATE CONTACTS
@@ -38,14 +59,14 @@ jesus_contact.phones.extend([cel_jesus, home_jesus])
 
 
 #CREATE NATURAL DISASTERS & ALERTS
-natural_disaster_1 = NaturalDisaster(title="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA", latitude="37.676", longitude="122.509", location="4km WSW of Daly City, CA", timestamp="2019-02-12 15:08:40 (UTC)")
+natural_disaster_1 = NaturalDisaster(nat_type="Earthquake", title="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA", latitude="37.689511", longitude="-122.468796", location="4km WSW of Daly City, CA", timestamp="2019-02-12 15:08:40 (UTC)")
 alert_1 = Alert(natural_disaster=natural_disaster_1,
-                message="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA ******* User Location: 4355 Cornova st. Andaman and Nicobar Islands 744107, India User Coordinates: 35.839°N 119.849°W - Medical Information: allergies=seafood, medication=lorazepan")
+                message="Earthquake- M 4.6 - 21km SSE of Kettleman City, CA ******* User Location: 3098 E 10th St, Oakland, CA 94601 - User Coordinates (lat,lng): 37.776460, -122.228150 - Allergies: Penicillin, lactose, dogs - Medications: Metformin, Amlodipine")
 alert_1.user = user_fabio
 
-natural_disaster_2 = NaturalDisaster(title="Earthquake- M 5.8 - 4km WSW of Daly City, CA", latitude="35.839", longitude="119.849", location="21km SSE of Kettleman City, CA", timestamp="2019-05-8 03:03:30 (UTC)")
+natural_disaster_2 = NaturalDisaster(nat_type="Earthquake", title="Earthquake- M 5.8 - 4km WSW of Daly City, CA", latitude="36.008795", longitude="-119.962860", location="21km SSE of Kettleman City, CA", timestamp="2019-05-8 03:03:30 (UTC)")
 alert_2 = Alert(natural_disaster=natural_disaster_2,
-                message="Earthquake- M 5.8 - 4km WSW of Daly City, CA ******** User Location: 310 Magnolia st. Daly City, CA - User Coordinates: 37.676°N 122.509°W - Medical Information: allergies=penicilina, medication=insulin")
+                message="Earthquake- M 5.8 - 4km WSW of Daly City, CA ******** User Location: 683 Sutter St, San Francisco, CA 94109 - User Coordinates (lat,lng): 37.787970, -122.418470 - Allergies: Aspirin, seafood, nuts, cats - Medications: Lipitor, Lisinopril")
 alert_2.user = user_juan
 
 

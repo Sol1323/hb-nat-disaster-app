@@ -154,8 +154,8 @@ def get_new_earthquake(level, period):
             new_feed = get_all_earthquakes(level, period)
             new_feed_time = get_ms_time(new_feed, 0)
             # new_feed_time = "dsjifhdfh" for testing feed
-            print("last feed made:", last_feed)
-            print("new request made:", new_feed)
+            # print("last feed made:", last_feed)
+            # print("new request made:", new_feed)
 
         #Get new_earthquake in the new_feed request
         new_earthquake_feed = new_feed

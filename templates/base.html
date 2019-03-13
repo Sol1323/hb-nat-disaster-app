@@ -29,17 +29,84 @@
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon">
       <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
-  </head>
-  <body>
+    </head>
+    <body>
 
-    {% if "user_id" in session %}
+    <!-- {% if "user_id" in session %}
       <a href="/logout">Logout</a>
     {% else %}
       <a href="/signup">SignUp</a>
       <a href="/login">Login</a>
     {% endif %}
 
-    <hr>
+    <hr> -->
+
+    <!--========== HEADER V2 ==========-->
+<header class="navbar-fixed-top s-header-v2 js__header-sticky">
+    <!-- Navbar -->
+    <nav class="s-header-v2__navbar">
+        <div class="container g-display-table--lg">
+            <!-- Navbar Row -->
+            <div class="s-header-v2__navbar-row">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="s-header-v2__navbar-col">
+                    <button type="button" class="collapsed s-header-v2__toggle" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+                        <span class="s-header-v2__toggle-icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="s-header-v2__navbar-col s-header-v2__navbar-col-width--180">
+                    <!-- Logo -->
+                    <div class="s-header-v2__logo">
+                        <a href="index.html" class="s-header-v2__logo-link">
+                            <img class="s-header-v2__logo-img s-header-v2__logo-img--default" src="/static/img/logo-white.png" alt="Dublin Logo">
+                            <img class="s-header-v2__logo-img s-header-v2__logo-img--shrink" src="/static/img/logo.png" alt="Dublin Logo">
+                        </a>
+                    </div>
+                    <!-- End Logo -->
+                </div>
+
+                <div class="s-header-v2__navbar-col s-header-v2__navbar-col--right">
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse s-header-v2__navbar-collapse" id="nav-collapse">
+                        <ul class="s-header-v2__nav">
+                            <!-- Home -->
+                            <li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
+                                <a href="index.html" class="dropdown-toggle s-header-v2__nav-link -is-active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Home <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
+                                <ul class="dropdown-menu s-header-v2__dropdown-menu">
+                                    <li><a href="#how-it-works" class="s-header-v2__dropdown-menu-link">How it Works</a></li>
+                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">About Us</a></li>
+                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Contact Us</a></li>
+                                </ul>
+                            </li>
+                            <!-- End Home -->
+
+                            <!-- Pages -->
+                            <li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
+                                <a href="javascript:void(0);" class="dropdown-toggle s-header-v2__nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
+                                <ul class="dropdown-menu s-header-v2__dropdown-menu">
+                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
+                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Settings</a></li>
+                                </ul>
+                            </li>
+                            <!-- End Pages -->
+                            <li class="s-header-v2__nav-item"><a href="contacts.html" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
+                            <li class="s-header-v2__nav-item"><a href="services.html" class="s-header-v2__nav-link">Log In</a></li>
+                            <li class="s-header-v2__nav-item"><a href="about.html" class="s-header-v2__nav-link">Sign Up</a></li>
+                        </ul>
+                    </div>
+                    <!-- End Nav Menu -->
+                </div>
+            </div>
+            <!-- End Navbar Row -->
+        </div>
+    </nav>
+    <!-- End Navbar -->
+</header>
+<!--========== END HEADER V2 ==========-->
+
+
+
 
     {% for flash in get_flashed_messages() %}
       {{ flash }}
@@ -79,7 +146,7 @@
     <script type="text/javascript" src="/static/js/components/wow.min.js"></script>
 
     <!-- My Overriding Settings -->
-    <script src="/static/js/main.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
     <!--========== END JAVASCRIPTS ==========-->
 
   </body>

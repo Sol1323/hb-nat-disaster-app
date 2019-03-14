@@ -74,9 +74,8 @@
                             <li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
                                 <a href="index.html" class="dropdown-toggle s-header-v2__nav-link -is-active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Home <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
                                 <ul class="dropdown-menu s-header-v2__dropdown-menu">
+                                    <li><a href="/login" class="s-header-v2__dropdown-menu-link">Log In</a></li>
                                     <li><a href="#how-it-works" class="s-header-v2__dropdown-menu-link">How it Works</a></li>
-                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">About Us</a></li>
-                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Contact Us</a></li>
                                 </ul>
                             </li>
                             <!-- End Home -->
@@ -85,12 +84,13 @@
                             <li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
                                 <a href="javascript:void(0);" class="dropdown-toggle s-header-v2__nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
                                 <ul class="dropdown-menu s-header-v2__dropdown-menu">
-                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
-                                    <li><a href="#" class="s-header-v2__dropdown-menu-link">Settings</a></li>
+                                    <li><a href="#profile" class="s-header-v2__dropdown-menu-link">Profile</a></li>
+                                    <li><a href="#contacts" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
+                                    <li><a href="#settings" class="s-header-v2__dropdown-menu-link">Settings</a></li>
                                 </ul>
                             </li>
                             <!-- End Pages -->
-                            <li class="s-header-v2__nav-item"><a href="contacts.html" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
+                            <li class="s-header-v2__nav-item"><a href="/locations" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
                             {% if "user_id" in session %}
                               <li class="s-header-v2__nav-item"><a href="/logout" class="s-header-v2__nav-link">Logout</a></li>
                             {% else %}
@@ -122,7 +122,7 @@
 
 
     <footer class="container">
-           Made with <i class="fa fa-heart"></i> by <a href="https://github.com/Sol1323">Sol</a><a href="https://hackbrightacademy.com/">@Hackbright</a>.
+           Made by <a href="https://github.com/Sol1323">Sol</a><a href="https://hackbrightacademy.com/">@Hackbright</a>.
     </footer>
 
     <!-- Back To Top -->

@@ -293,7 +293,7 @@ def get_user_location():
 
 
 
-    return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY)
+    return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY, user=user)
 
 
 @app.route('/tests', methods=['POST'])

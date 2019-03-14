@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div  id="success-location" class="s-promo-block-v7 g-bg-position--center g-bg-color--dark-light" style="background: url('img/1920x1080/05.jpg') no-repeat;"></div>
-<div id="map"></div>
+  <div id="success-location" class="s-promo-block-v7 g-bg-position--center g-bg-color--dark-light" style="background: url('img/1920x1080/05.jpg') no-repeat;"></div>
 
-<!-- scripts for google map -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
-</script>
-<script src="/static/js/maps.js"></script>
+  <div class="g-bg-color--primary-to-blueviolet-ltr">
+    <div class="g-text-center--xs">
+      <button type="submit" class="text-uppercase s-btn s-btn--md s-btn--white-brd g-radius--50 g-padding-x-70--xs g-margin-b-20--xs"><a href="/users/{{ user.user_id }}" style="color:white;""> Go Back to Profile</a></button>
+    </div>
+  </div>
+
+
+
+  <div id="map"></div>
+
+  <!-- scripts for google map -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
+  </script>
+  <script src="/static/js/maps.js"></script>
 {% endblock %}

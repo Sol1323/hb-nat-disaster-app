@@ -82,17 +82,17 @@
                             <!-- End Home -->
 
                             <!-- Pages -->
+                            {% if "user_id" in session %}
                             <li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
                                 <a href="javascript:void(0);" class="dropdown-toggle s-header-v2__nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
                                 <ul class="dropdown-menu s-header-v2__dropdown-menu">
-                                    <li><a href="#profile" class="s-header-v2__dropdown-menu-link">Profile</a></li>
-                                    <li><a href="#contacts" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
-                                    <li><a href="#settings" class="s-header-v2__dropdown-menu-link">Settings</a></li>
+                                      <li><a href="/users/{{ user.user_id }}" class="s-header-v2__dropdown-menu-link">Profile</a></li>
+                                    <li><a href="#contacts-link" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
+                                    <li><a href="#settings-link" class="s-header-v2__dropdown-menu-link">Settings</a></li>
                                 </ul>
                             </li>
                             <!-- End Pages -->
                             <li class="s-header-v2__nav-item"><a href="/locations" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
-                            {% if "user_id" in session %}
                               <li class="s-header-v2__nav-item"><a href="/logout" class="s-header-v2__nav-link">Logout</a></li>
                             {% else %}
                               <li class="s-header-v2__nav-item"><a href="/signup" class="s-header-v2__nav-link">Sign Up</a></li>

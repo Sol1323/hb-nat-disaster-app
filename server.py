@@ -49,8 +49,13 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    if session:
+        user_id = session['user_id']
+        user = User.query.get(user_id)
 
-    return render_template('index.html')
+        print(user)
+
+    return render_template('index.html', user=user)
 
 
 @app.route('/signup', methods=['GET','POST'])
@@ -58,7 +63,11 @@ def signup():
     """User sign up."""
 
     if request.method == 'GET':
-        return render_template('signup_form.html')
+        if session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+        return render_template('signup_form.html', user=user)
 
     elif request.method == 'POST':
     # Get form variables
@@ -95,7 +104,11 @@ def login():
     """Show & process login."""
 
     if request.method == 'GET':
-        return render_template("login_form.html")
+        if session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+        return render_template("login_form.html", user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -208,7 +221,11 @@ def contact_profile(contact_id):
     contact = Contact.query.get(contact_id)
 
     if request.method == 'GET':
-        return render_template('contact.html', contact=contact)
+        if session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+        return render_template('contact.html', contact=contact, user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -235,10 +252,13 @@ def contact_profile(contact_id):
 def earthquake_list():
     """Show list of all earthquakes."""
 
+    if session:
+        user_id = session['user_id']
+        user = User.query.get(user_id)
     #Get all earthquakes in the past hour
     feeds = get_all_earthquakes("all", "hour")
     earthquakes = Earthquake.query.all()
-    return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds)
+    return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds, user=user)
 
 
 @app.route('/earthquakes/<int:nat_id>')

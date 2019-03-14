@@ -316,7 +316,7 @@ def create_test():
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    schedule.every(10).seconds.do(get_new_earthquake, level="2.5", period="hour")
+    schedule.every(30).seconds.do(get_new_earthquake, level="2.5", period="hour")
     app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar

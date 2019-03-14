@@ -219,11 +219,11 @@
           </div>
           <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
             <h3 class="g-font-size-18--xs g-margin-b-10--xs">Type:</h3>
-            <input type="text" class="phone-type form-control s-form-v4__input g-padding-l-0--xs" name="type" placeholder="* Email">
+            <input type="text" class="phone-type form-control s-form-v4__input g-padding-l-0--xs" name="type" placeholder="* Type">
           </div>
           <div class="col-sm-4">
             <h3 class="g-font-size-18--xs g-margin-b-10--xs">Phone:</h3>
-            <input type="text" class="contact-phone form-control s-form-v4__input g-padding-l-0--xs" name="phone" placeholder="* Age">
+            <input type="text" class="contact-phone form-control s-form-v4__input g-padding-l-0--xs" name="phone" placeholder="* Phone">
           </div>
           <!-- new -->
         </div>
@@ -274,10 +274,6 @@
 </div>
 
 
-<!-- TODO: Toggle button on/off alert -->
-<!-- <label class="checkbox-inline">
-    <input type="checkbox" checked data-toggle="toggle"> Toggle Button
-  </label> -->
 <div class="g-hor-divider__solid--sky-light">
   <div class="container g-padding-y-80--xs g-padding-y-125--sm">
     <div class="row g-margin-b-60--xs g-margin-b-70--md">
@@ -286,17 +282,21 @@
         <h2 class="g-font-size-32--xs g-font-size-36--md">Magnitude level:</h2>
       </div>
 
+      <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+        <div class="g-text-center--xs">
+          <form id="earthquake-form" action="/settings/eqmag" method="POST">
+            <select class="form-control s-form-v4__input g-padding-l-0--xs" name="magnitude">
+              <option value="4.5">4.5 or higher</option>
+              <option value="2.5">2.5 or higher</option>
+            </select>
+            <br><br>
+            <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
+            <input class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-70--xs g-margin-b-20--xs" type="submit" value="Submit">
+          </form>
+        </div>
+      </div>
 
-      <!-- TODO: Refactor model.py to store user's settings -->
-      <form id="earthquake-form" action="/settings/eqmag" method="POST">
-        <select name="magnitude">
-          <option value="4.5">4.5 or higher</option>
-          <option value="2.5">2.5 or higher</option>
-        </select>
-        <br><br>
-        <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
-        <input type="submit" value="Submit">
-      </form><br><br>
+      <br><br>
 
     </div>
   </div>

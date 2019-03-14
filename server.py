@@ -60,9 +60,8 @@ def signup():
     """User sign up."""
 
     if request.method == 'GET':
-        if session:
-            user_id = session['user_id']
-            user = User.query.get(user_id)
+
+        user = None
 
         return render_template('signup_form.html', user=user)
 

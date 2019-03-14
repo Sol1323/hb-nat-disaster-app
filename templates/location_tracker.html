@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div  id="success-location" class="s-promo-block-v7 g-bg-position--center g-bg-color--dark-light" style="background: url('img/1920x1080/05.jpg') no-repeat;"></div>
 <div id="map"></div>
 
+<!-- scripts for google map -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
 </script>
 <script src="/static/js/maps.js"></script>

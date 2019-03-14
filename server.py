@@ -292,6 +292,7 @@ def get_user_location():
         user.add_location(lat, lng, address)
 
 
+
     return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY)
 
 

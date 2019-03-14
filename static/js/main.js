@@ -35,8 +35,9 @@ $('#add-contact-form').on('submit', (evt) => {
   $.post('/contacts', formInputs, (contact) => {
     console.log(contact)
     $('.user-contacts').append(`
-                              <a href="/contacts/${contact.contact_id}"> ${contact.name} </a>
-                              <li>${contact.phone[0].type}: ${contact.phone[0].phone}</li>
+                              <h3 class="g-font-size-18--xs g-margin-b-10--xs"><a href="/contacts/${contact.contact_id}"> ${contact.name}</a></h3>
+                              <li class="g-font-size-18--sm">${contact.phone[0].type}: ${contact.phone[0].phone}</li>
+                              <button type="button" class="edit-contact-button s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs" id="${contact.contact_id }">Edit</button>
                               `
                               );
     $('#add-contact-form').each(function(){

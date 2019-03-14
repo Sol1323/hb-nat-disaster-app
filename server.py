@@ -291,7 +291,7 @@ def get_user_location():
 
         user.add_location(lat, lng, address)
 
-
+    flash(f"Location successfully recorded!")
 
     return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY, user=user)
 

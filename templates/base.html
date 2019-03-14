@@ -112,9 +112,15 @@
 
 
 
-
     {% for flash in get_flashed_messages() %}
-      {{ flash }}
+    <div class="alert alert-flash alert-success" role="alert">
+      <strong>{{ flash }}</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
     {% endfor %}
 
     {% block content %}
@@ -123,7 +129,7 @@
 
 
     <footer class="container">
-           Made by <a href="https://github.com/Sol1323">Sol</a><a href="https://hackbrightacademy.com/">@Hackbright</a>.
+           Made by <a href="https://github.com/Sol1323">Sol</a>-<a href="https://hackbrightacademy.com/">@Hackbright</a>.
     </footer>
 
     <!-- Back To Top -->

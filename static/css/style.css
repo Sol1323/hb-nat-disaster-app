@@ -4,6 +4,11 @@ display:none;
 
 }
 
+.alert-flash {
+  position: absolute;
+  margin-top: 100px;
+}
+
 /* body {
 
 font-family:monospace;

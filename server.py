@@ -50,9 +50,12 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    user = None
+    # if session:
+    #     user_id = session['user_id']
+    #     user = User.query.get(user_id)
 
-    return render_template('index.html', user=user)
+
+    return render_template('index.html')
 
 
 @app.route('/signup', methods=['GET','POST'])

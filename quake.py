@@ -141,7 +141,7 @@ def get_new_earthquake(level, period):
     new_earthquake = None
 
     last_feed = get_all_earthquakes(level, period) #Quake feed object
-    print("Last feed element zero is: ", last_feed[0])
+    # print("Last feed element zero is: ", last_feed[0])
     new_feed = get_all_earthquakes(level, period)
 
 

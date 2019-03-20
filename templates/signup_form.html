@@ -1,78 +1,124 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>SignUp</h1>
+<!--========== PROMO BLOCK ==========-->
+      <section class="s-video-v2__bg" data-vidbg-bg="mp4: /static/include/media/mp4_video.mp4, webm: /static/include/media/webm_video.webm, poster: /static/include/media/fallback.jpg" data-vidbg-options="loop: true, muted: true, overlay: false">
+          <div class="container g-position--overlay g-text-center--xs">
+              <div class="g-padding-y-50--xs g-margin-t-100--xs g-margin-b-100--xs g-margin-b-250--md">
+                  <h1 class="g-font-size-36--xs g-font-size-50--sm g-font-size-60--md g-color--white">Sign Up!</h1>
+                  <h2 class="g-font-size-36--xs g-font-size-50--sm g-font-size-60--md g-color--white">AlertIn is a Life saving app</h2>
+              </div>
+              <!-- Arrows -->
+              <a href="javascript:void(0);" class="s-swiper__arrow-v1--right s-icon s-icon--md s-icon--white-brd g-radius--circle ti-angle-right js__swiper-btn--next"></a>
+              <a href="javascript:void(0);" class="s-swiper__arrow-v1--left s-icon s-icon--md s-icon--white-brd g-radius--circle ti-angle-left js__swiper-btn--prev"></a>
+              <!-- End Arrows -->
 
-<form action="/signup" method="POST">
+              <a href="#js__scroll-to-appointment" class="s-scroll-to-section-v1--bc g-margin-b-15--xs">
+                  <span class="g-font-size-18--xs g-color--white ti-angle-double-down"></span>
+                  <p class="text-uppercase g-color--white g-letter-spacing--3 g-margin-b-0--xs">Learn More</p>
+              </a>
+          </div>
+      </section>
+      <!--========== END PROMO BLOCK ==========-->
 
-  <div>
-    <label>
-      Email
-      <input type="email" name="email">
-    </label>
+
+<!-- Form -->
+  <div id="js__scroll-to-appointment" class="g-bg-color--sky-light g-padding-y-80--xs g-padding-y-125--sm">
+      <div class="container g-bg-color--white g-box-shadow__dark-lightest-v3">
+          <div class="row">
+              <!-- Form -->
+              <div class="col-md-8 js__form-eqaul-height-v1">
+                  <div class="g-padding-x-40--xs g-padding-y-50--xs">
+                      <h2 class="g-font-size-24--xs g-color--primary g-margin-b-50--xs">Sign Up</h2>
+                      <form action="/signup" method="POST">
+                          <div class="row g-margin-b-30--xs g-margin-b-50--md">
+                              <div class="col-sm-6 g-margin-b-30--xs g-margin-b-0--md">
+                                  <input type="email" class="form-control s-form-v4__input g-padding-l-0--xs" name="email" placeholder="* Email">
+                              </div>
+                              <div class="col-sm-6">
+                                  <input type="password" class="form-control s-form-v4__input g-padding-l-0--xs" name="password" placeholder="* Password">
+                              </div>
+                          </div>
+                          <!-- new -->
+                          <div class="row g-margin-b-50--xs g-margin-b-50--md">
+                              <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+                                  <input type="text" class="form-control s-form-v4__input g-padding-l-0--xs" name="name" placeholder="* Name">
+                              </div>
+                              <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+                                  <input type="number" class="form-control s-form-v4__input g-padding-l-0--xs" name="age" placeholder="* Age">
+                              </div>
+                              <div class="col-sm-4">
+                                  <input type="tel" class="form-control s-form-v4__input g-padding-l-0--xs" name="phone" placeholder="* PhoneNumber">
+                              </div>
+                          <!-- new -->
+                          </div>
+                          <div class="row g-margin-b-50--xs g-margin-b-50--md">
+                              <div class="col-sm-6 g-margin-b-30--xs g-margin-b-0--md">
+                                  <input type="text" class="form-control s-form-v4__input g-padding-l-0--xs" name="residency-address" placeholder="* Residency Address">
+                              </div>
+                              <div class="col-sm-6 g-margin-b-30--xs g-margin-b-0--md">
+                                  <input type="text" class="form-control s-form-v4__input g-padding-l-0--xs" name="zipcode" placeholder="* Zipcode">
+                              </div>
+                          </div>
+                          <div class="g-margin-b-50--xs">
+                              <textarea class="form-control s-form-v4__input g-padding-l-0--xs" rows="5" name="allergies" placeholder="* Allergies"></textarea>
+                          </div>
+                          <div class="g-margin-b-50--xs">
+                              <textarea class="form-control s-form-v4__input g-padding-l-0--xs" rows="5" name="medications" placeholder="* Medications"></textarea>
+                          </div>
+                          <div class="g-text-center--xs">
+                              <button type="submit" class="text-uppercase s-btn s-btn--md s-btn--primary-bg g-radius--50 g-padding-x-70--xs g-margin-b-20--xs">Submit</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <!-- End Form -->
+
+              <!-- Contacts -->
+              <div class="col-md-4 g-bg-color--primary-ltr js__form-eqaul-height-v1">
+                  <div class="g-overflow--hidden g-padding-x-40--xs g-padding-y-50--xs">
+                      <h2 class="g-font-size-24--xs g-color--white g-margin-b-50--xs">Contact Us</h2>
+                      <ul class="list-unstyled g-margin-b-70--xs">
+                          <li class="clearfix g-color--white g-margin-b-40--xs">
+                              <div class="g-media g-width-40--xs g-margin-t-5--xs">
+                                  <i class="g-font-size-20--xs g-color--white-opacity-light ti-location-pin"></i>
+                              </div>
+                              <div class="g-media__body">
+                                  277 Bedford Avenue, <br> Brooklyn, NY 11211, New York
+                              </div>
+                          </li>
+                          <li class="clearfix g-color--white g-margin-b-40--xs">
+                              <div class="g-media g-width-40--xs g-margin-t-5--xs">
+                                  <i class="g-font-size-20--xs g-color--white-opacity-light ti-headphone-alt"></i>
+                              </div>
+                              <div class="g-media__body">
+                                  + (1) 001 389 3720
+                              </div>
+                          </li>
+                          <li class="clearfix g-color--white g-margin-b-40--xs">
+                              <div class="g-media g-width-40--xs g-margin-t-5--xs">
+                                  <i class="g-font-size-20--xs g-color--white-opacity-light ti-email"></i>
+                              </div>
+                              <div class="g-media__body">
+                                  support@alertin.com
+                              </div>
+                          </li>
+                      </ul>
+                      <ul class="list-inline g-ul-li-lr-15--xs">
+                          <li><a href="#"><i class="g-font-size-20--xs g-color--white-opacity ti-facebook"></i></a></li>
+                          <li><a href="#"><i class="g-font-size-20--xs g-color--white-opacity ti-twitter"></i></a></li>
+                          <li><a href="#"><i class="g-font-size-20--xs g-color--white-opacity ti-instagram"></i></a></li>
+                      </ul>
+                      <i class="g-font-size-150--xs g-color--white-opacity-lightest ti-comments" style="position: absolute; bottom: -1.25rem; right: -1.25rem;"></i>
+                  </div>
+              </div>
+              <!-- End Contacts -->
+          </div>
+      </div>
   </div>
+  <!-- End Form -->
 
-  <div>
-    <label>
-      Password
-      <input type="password" name="password">
-    </label>
-  </div>
 
-  <div>
-    <label>
-      Name
-      <input type="text" name="name">
-    </label>
-  </div>
 
-  <div>
-    <label>
-      Age
-      <input type="number" name="age">
-    </label>
-  </div>
-
-  <div>
-    <label>
-      Phone
-      <input type="tel" id="phone" name="phone" required>
-      <span class="note">Format: 1234567890</span>
-    </label>
-  </div>
-
-  <div>
-    <label>
-      Residency Address
-      <input type="text" name="residency-address">
-    </label>
-  </div>
-
-  <div>
-    <label>
-      Zipcode
-      <input type="text" name="zipcode">
-    </label>
-  </div>
-
-  <div>
-    <label>
-      Medications:
-      <input type="text" name="medications">
-    </label>
-  </div>
-
-  <div>
-    <label>
-      Allergies:
-      <input type="text" name="allergies">
-    </label>
-  </div><br>
-
-  <div>
-    <input type="submit" value="SignUp">
-  </div><br>
-
-</form>
 
 {% endblock %}

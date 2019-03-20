@@ -7,11 +7,6 @@ import googlemaps
 from geopy import distance
 from quake import *
 
-# from twilio.twiml.messaging_response import MessagingResponse, Message
-# from twilio.rest import Client
-# from twilio.base.exceptions import TwilioRestException
-# import urllib
-
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
@@ -26,16 +21,6 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 #Get google maps secret key
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 
-#Get twilio account sid, auth token, phone number for sms and test phones
-# TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-# TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-# TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
-# TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
-# TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
-# TEST_PHONE = os.environ.get('TEST_PHONE')
-#
-# # Account SID and Auth Token for twilio
-# client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 #Define google maps client
 gmaps = googlemaps.Client(GOOGLE_KEY)
@@ -50,6 +35,11 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
+    # if session:
+    #     user_id = session['user_id']
+    #     user = User.query.get(user_id)
+
+
     return render_template('index.html')
 
 
@@ -58,6 +48,7 @@ def signup():
     """User sign up."""
 
     if request.method == 'GET':
+
         return render_template('signup_form.html')
 
     elif request.method == 'POST':
@@ -95,7 +86,11 @@ def login():
     """Show & process login."""
 
     if request.method == 'GET':
-        return render_template("login_form.html")
+        if session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+        return render_template("login_form.html", user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -139,7 +134,7 @@ def user_profile(user_id):
 
     if request.method == 'GET':
 
-        return render_template('user.html', user=user, GOOGLE_KEY=GOOGLE_KEY)
+        return render_template('user.html', user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -208,7 +203,11 @@ def contact_profile(contact_id):
     contact = Contact.query.get(contact_id)
 
     if request.method == 'GET':
-        return render_template('contact.html', contact=contact)
+        if session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+
+        return render_template('contact.html', contact=contact, user=user)
 
     elif request.method == 'POST':
         # Get form variables
@@ -235,10 +234,13 @@ def contact_profile(contact_id):
 def earthquake_list():
     """Show list of all earthquakes."""
 
+    if session:
+        user_id = session['user_id']
+        user = User.query.get(user_id)
     #Get all earthquakes in the past hour
     feeds = get_all_earthquakes("all", "hour")
     earthquakes = Earthquake.query.all()
-    return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds)
+    return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds, user=user)
 
 
 @app.route('/earthquakes/<int:nat_id>')
@@ -277,21 +279,24 @@ def update_setting(setting_code):
 #----------------------------ALERT ROUTES---------------------------------------
 
 @app.route('/locations')
-def create_alerts():
-    """Create an sms alert to user's contacts."""
+def get_user_location():
+    """Get user location and save it into db"""
 
     user_id = session['user_id']
     user = User.query.get(user_id)
     lat = request.args.get('lat')
     lng = request.args.get('lng')
 
-    result = gmaps.reverse_geocode(latlng=(lat, lng))
-    address = result[0]['formatted_address']
+    if lat:
+        result = gmaps.reverse_geocode(latlng=(lat, lng))
+        address = result[0]['formatted_address']
 
-    user.add_location(lat, lng, address)
+        user.add_location(lat, lng, address)
 
+    flash(f"Location successfully recorded!")
 
-    return redirect(f'/users/{user_id}')
+    return render_template('location_tracker.html', GOOGLE_KEY=GOOGLE_KEY, user=user)
+
 
 @app.route('/tests', methods=['POST'])
 def create_test():
@@ -303,7 +308,7 @@ def create_test():
     body = user.create_test_message()
 
     send_sms(phone, user, body)
-
+#
     flash(f"Message sent to your phone.")
 
     return redirect(f'/users/{user_id}')
@@ -314,9 +319,9 @@ if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
     schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
-    app.debug = True
+    # app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
     schedule.run_continuously(1)
     app.run(host='0.0.0.0')

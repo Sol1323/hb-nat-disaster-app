@@ -141,7 +141,7 @@ def get_new_earthquake(level, period):
     new_earthquake = None
 
     last_feed = get_all_earthquakes(level, period) #Quake feed object
-    print("Last feed element zero is: ", last_feed[0])
+    # print("Last feed element zero is: ", last_feed[0])
     new_feed = get_all_earthquakes(level, period)
 
 
@@ -151,9 +151,9 @@ def get_new_earthquake(level, period):
 
         #Until they are not equal keep requesting but last_feed will remain the same
         while last_feed_time == new_feed_time:
-            new_feed = get_all_earthquakes(level, period)
-            new_feed_time = get_ms_time(new_feed, 0)
-            # new_feed_time = "dsjifhdfh" for testing feed
+            # new_feed = get_all_earthquakes(level, period)
+            # new_feed_time = get_ms_time(new_feed, 0)
+            # new_feed_time = "dsjifhdfh"
             print("last feed made:", last_feed)
             print("new request made:", new_feed)
 
@@ -201,9 +201,9 @@ def get_new_earthquake(level, period):
 if __name__ == '__main__':
 #
     connect_to_db(app)
-#     # schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
-#     #
-#     schedule.run_continuously(1)
+    # schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
+    #
+    # schedule.run_continuously(1)
 
     # while True:
     #     schedule.run_pending()

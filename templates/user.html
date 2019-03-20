@@ -1,132 +1,293 @@
 {% extends 'base.html' %}
+{% block navbar %}
+
+<li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
+    <a href="javascript:void(0);" class="dropdown-toggle s-header-v2__nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
+    <ul class="dropdown-menu s-header-v2__dropdown-menu">
+          <li><a href="/users/{{ user.user_id }}" class="s-header-v2__dropdown-menu-link">Profile</a></li>
+        <li><a href="#contacts-link" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
+        <li><a href="#settings-link" class="s-header-v2__dropdown-menu-link">Settings</a></li>
+    </ul>
+</li>
+<!-- End Pages -->
+<li class="s-header-v2__nav-item"><a href="/locations" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
+{% endblock navbar %}
+
 {% block content %}
 
-  <div id="show-user-info">
-    <h1>{{ user.name }}</h1>
-    <p>({{ user.user_id }})<p>
-    <p><b>Email:</b> {{ user.email }}</p>
-    <p><b>Age:</b> {{ user.age }}</p>
-    <p><b>Residency Address:</b> {{ user.residency_address }}</p>
-    <p><b>Zipcode:</b> {{ user.zipcode }}</p>
-    <p><b>Allergies:</b> {{ user.allergies }}</p>
-    <p><b>Medications:</b> {{ user.medications }}</p>
-    <p><b>Phone:</b> {{ user.phone }}</p>
-  </div>
 
-<!------------------------------ EDIT USER FORM  ---------------------------------->
-  <button type="button" id="edit-user-form-button">Edit</button>
-  <form id="user-edit-form" class="edit-form-hidden" action="/users/{{ user.user_id }}" method="POST">
-    <p><b>Name:</b></p>
-    <input class="user-name" type="text" value="{{ user.name }}" name="name">
-    <p><b>Email:</b></p>
-    <input class="user-email" type="text" value="{{ user.email }}" name="email">
-    <p><b>Age:</b></p>
-    <input class="user-age" type="text" value="{{ user.age }}" name="age">
-    <p><b>Residency Address:</b></p>
-    <input class="user-address" type="text" value="{{ user.residency_address }}" name="residency_address">
-    <p><b>Zipcode:</b></p>
-    <input class="user-zipcode" type="text" value="{{ user.zipcode }}" name="zipcode">
-    <p><b>Allergies:</b></p>
-    <input class="user-allergies" type="text" value="{{ user.allergies }}" name="allergies">
-    <p><b>Medications:</b></p>
-    <input class="user-medications" type="text" value="{{ user.medications }}" name="medications">
-    <p><b>Phone:</b></p>
-    <input class="user-phone" type="text" value="{{ user.phone }}" name="phone">
-    <input type="hidden" class="user-id" name="user-id" value="{{ user.user_id }}">
-    <input type="submit" id="submit" value="Save"></input>
-  </form>
+<div class="g-bg-color--primary-to-blueviolet-ltr">
+  <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+    <div class="g-text-center--xs g-margin-b-80--xs">
+      <br><br>
+      <h2 class="g-font-size-32--xs g-font-size-36--md g-letter-spacing--1 g-color--white">{{ user.name }}'s Profile</h2>
+    </div>
+  </div>
+  <div class="g-text-center--xs">
+    <form action="/tests" method="POST">
+      <input type="submit" class="text-uppercase s-btn s-btn--md s-btn--white-brd g-radius--50 g-padding-x-70--xs g-margin-b-20--xs" id="invite-button" value="Test a message to yourself"></input>
+    </form>
+    <button type="submit" class="text-uppercase s-btn s-btn--md s-btn--white-brd g-radius--50 g-padding-x-70--xs g-margin-b-20--xs"><a href="/locations" style="color:white;">Location Tracker</a></button>
+  </div>
+</div>
+
+
+<!-- Profile -->
+<div class="g-hor-divider__solid--sky-light">
+  <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+    <div class="row g-margin-b-60--xs g-margin-b-70--md">
+      <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Email:</h3>
+            <p class="g-font-size-18--sm">{{ user.email }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+      <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Residency Address:</h3>
+            <p class="g-font-size-18--sm">{{ user.residency_address }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+      <div class="col-sm-4">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Zipcode:</h3>
+            <p class="g-font-size-18--sm">{{ user.zipcode }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+    </div>
+
+    <div class="row g-margin-b-60--xs g-margin-b-70--md">
+      <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Allergies:</h3>
+            <p class="g-font-size-18--sm">{{ user.allergies }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+      <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Medications:</h3>
+            <p class="g-font-size-18--sm">{{ user.medications }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+      <div class="col-sm-4">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Phone:</h3>
+            <p class="g-font-size-18--sm">{{ user.phone }}</p>
+          </div>
+          <!-- <button type="button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button> -->
+        </div>
+        <!-- End Media -->
+      </div>
+    </div>
+    <!-- TOGGLE BUTTON -->
+    <button type="button" id="edit-user-form-button" class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs">Edit</button>
+    <!------------------------------ EDIT USER FORM  ---------------------------------->
+    <!-- <button type="button" id="edit-user-form-button">Edit</button> -->
+    <br><br>
+    <form id="user-edit-form" class="edit-form-hidden" action="/users/{{ user.user_id }}" method="POST">
+      <div class="row g-margin-b-50--xs g-margin-b-50--md">
+        <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Name:</h3>
+          <input type="text" class="user-name form-control s-form-v4__input g-padding-l-0--xs" name="name" value="{{ user.name }}" placeholder="* Name">
+        </div>
+        <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Email:</h3>
+          <input type="email" class="user-email form-control s-form-v4__input g-padding-l-0--xs" name="email" value="{{ user.email }}" placeholder="* Email">
+        </div>
+        <div class="col-sm-4">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Age:</h3>
+          <input type="text" class="user-age form-control s-form-v4__input g-padding-l-0--xs" name="age" value="{{ user.age }}" placeholder="* Age">
+        </div>
+        <!-- new -->
+      </div>
+      <div class="row g-margin-b-50--xs g-margin-b-50--md">
+        <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Phone:</h3>
+          <input type="tel" class="user-phone form-control s-form-v4__input g-padding-l-0--xs" name="phone" value="{{ user.phone }}" placeholder="* Phone Number">
+        </div>
+        <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Allergies:</h3>
+          <input type="text" class="user-allergies form-control s-form-v4__input g-padding-l-0--xs" name="allergies" value="{{ user.allergies }}" placeholder="* Allergies">
+        </div>
+        <div class="col-sm-4">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Medications:</h3>
+          <input type="text" class="user-medications form-control s-form-v4__input g-padding-l-0--xs" value="{{ user.medications }}" name="medications" placeholder="* Medications">
+        </div>
+        <!-- new -->
+      </div>
+
+      <div class="row g-margin-b-30--xs g-margin-b-50--md">
+        <div class="col-sm-6 g-margin-b-30--xs g-margin-b-0--md">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Residency Address:</h3>
+          <input type="text" class="user-address form-control s-form-v4__input g-padding-l-0--xs" name="residency_address" value="{{ user.residency_address }}" placeholder="* Residency Address">
+        </div>
+        <div class="col-sm-6">
+          <h3 class="g-font-size-18--xs g-margin-b-10--xs">Zipcode:</h3>
+          <input type="text" class="user-zipcode form-control s-form-v4__input g-padding-l-0--xs" name="zipcode" value="{{ user.zipcode }}" placeholder="* Zipcode">
+        </div>
+      </div>
+      <input type="hidden" class="user-id" name="user-id" value="{{ user.user_id }}">
+      <input type="submit" id="submit" value="Save"></input>
+    </form>
+
+  </div>
+</div>
+</div>
+<!-- End User Profile Info -->
+
 
 <!------------------------------ SHOW CONTACTS  ---------------------------------->
-  {% if user.contacts %}
-  <h2>Contacts</h2>
 
-    <ul class="user-contacts">
-    {% for contact in user.contacts %}
-      <a href="/contacts/{{ contact.contact_id }}"> {{ contact.name }} </a>
-      <ul>
-      {% for phone in contact.phones %}
-          <li>{{ phone.type }}: {{ phone.phone }}</li>
-        <!------------------------------ EDIT CONTACT FORM  ---------------------------------->
-          <button type="button" class="edit-contact-button" id="{{ contact.contact_id }}">Edit</button>
-          <form class="edit-form-hidden" id="contact-edit-form-{{ contact.contact_id }}" action="/contacts/{{ contact.contact_id }}" method="POST">
-            <p><b>Name:</b></p>
-            <input class="edit-contact-name" type="text" value="{{ contact.name }}" name="name">
-            <p><b>Type:</b></p>
-            <input class="edit-contact-type" type="text" value="{{ phone.type }}" name="type">
-            <p><b>Phone:</b></p>
-            <input class="edit-contact-phone" type="text" value="{{ phone.phone }}" name="phone">
-            <input type="hidden" class="contact-id" name="contact-id" value="{{ contact.contact_id }}">
-            <input type="submit" id="submit" value="Save"></input>
-          </form>
-      {% endfor %}
-      </ul>
-    {% endfor %}
-    </ul>
-  {% endif %}
+{% if user.contacts %}
+<div id="contacts-link" class="g-bg-color--primary-to-blueviolet-ltr">
+  <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+    <div class="g-text-center--xs g-margin-b-80--xs">
+      <br><br>
+      <h2 class="g-font-size-32--xs g-font-size-36--md g-letter-spacing--1 g-color--white">Contacts</h2>
+    </div>
+  </div>
+</div>
 
-  <form action="/tests" method="POST">
-    <input type="submit" id="invite-button" value="Test a message to yourself"></input>
-  </form>
+<div class="g-hor-divider__solid--sky-light">
+  <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+    <div class="row g-margin-b-60--xs g-margin-b-70--md">
+      <div class="col-sm-4 g-margin-b-60--xs g-margin-b-0--md">
+        <!-- Media -->
+        <div class="clearfix">
+          <div class="g-media__body g-padding-x-20--xs">
+            <ul class="user-contacts">
+              {% for contact in user.contacts %}
+              <h3 class="g-font-size-18--xs g-margin-b-10--xs"><a href="/contacts/{{ contact.contact_id }}"> {{ contact.name }} </a></h3>
+
+              <ul>
+                {% for phone in contact.phones %}
+                <li class="g-font-size-18--sm">{{ phone.type }}: {{ phone.phone }}</li>
+                <!------------------------------ EDIT CONTACT FORM  ---------------------------------->
+                <button type="button" class="edit-contact-button s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-50--xs" id="{{ contact.contact_id }}">Edit</button>
+                <form class="edit-form-hidden" id="contact-edit-form-{{ contact.contact_id }}" action="/contacts/{{ contact.contact_id }}" method="POST">
+                  <p><b>Name:</b></p>
+                  <input class="edit-contact-name" type="text" value="{{ contact.name }}" name="name">
+                  <p><b>Type:</b></p>
+                  <input class="edit-contact-type" type="text" value="{{ phone.type }}" name="type">
+                  <p><b>Phone:</b></p>
+                  <input class="edit-contact-phone" type="text" value="{{ phone.phone }}" name="phone">
+                  <input type="hidden" class="contact-id" name="contact-id" value="{{ contact.contact_id }}">
+                  <input type="submit" id="submit" value="Save"></input>
+                </form>
+                {% endfor %}
+              </ul>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!------------------------------ ADD CONTACT FORM  ---------------------------------->
-  <h3>Add a contact:</h3>
+<div class="g-hor-divider__solid--sky-light">
+  <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+    <div class="row g-margin-b-60--xs g-margin-b-70--md">
+      <div class="g-text-center--xs g-margin-b-80--xs">
+        <p class="text-uppercase g-font-size-14--xs g-font-weight--700 g-color--primary g-letter-spacing--2 g-margin-b-25--xs"></p>
+        <h2 class="g-font-size-32--xs g-font-size-36--md">Add a contact:</h2>
+      </div>
 
-  <form id="add-contact-form" action="/contacts" method="POST">
-    <div>
-      <label>
-        Name
-        <input class="contact-name" type="text" name="name">
-      </label>
+      <form id="add-contact-form" action="/contacts" method="POST">
+        <div class="row g-margin-b-50--xs g-margin-b-50--md">
+          <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Name:</h3>
+            <input type="text" class="contact-name user-name form-control s-form-v4__input g-padding-l-0--xs" name="name" placeholder="* Name">
+          </div>
+          <div class="col-sm-4 g-margin-b-30--xs g-margin-b-0--md">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Type:</h3>
+            <input type="text" class="phone-type form-control s-form-v4__input g-padding-l-0--xs" name="type" placeholder="* Type">
+          </div>
+          <div class="col-sm-4">
+            <h3 class="g-font-size-18--xs g-margin-b-10--xs">Phone:</h3>
+            <input type="text" class="contact-phone form-control s-form-v4__input g-padding-l-0--xs" name="phone" placeholder="* Phone">
+          </div>
+          <!-- new -->
+        </div>
+        <div>
+          <input type="submit" value="Add">
+        </div><br>
+      </form>
     </div>
-
-    <div>
-      <label>
-        Type
-        <input class="phone-type" type="text" name="type">
-      </label>
-    </div>
-
-    <div>
-      <label>
-        Phone
-        <input class="contact-phone" type="text" name="phone">
-      </label>
-    </div>
-
-    <div>
-      <input type="submit" value="Add">
-    </div><br>
-  </form>
+  </div>
+</div>
 
 
 <!------------------------------ ADD EARTHQUAKE ALERT SETTING ---------------------------------->
-  <h2>Earthquake Alert Settings:</h2>
-
-  <!-- TODO: Toggle button on/off alert -->
-  <!-- <label class="checkbox-inline">
-    <input type="checkbox" checked data-toggle="toggle"> Toggle Button
-  </label> -->
-
-  <div>
-    <h3>Magnitude Level</h3>
-    <p id="mag-user-value"><p>
+<div id="settings-link" class="g-bg-color--primary-to-blueviolet-ltr">
+  <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+    <div class="g-text-center--xs g-margin-b-80--xs">
+      <br><br>
+      <h2 class="g-font-size-32--xs g-font-size-36--md g-letter-spacing--1 g-color--white">Earthquake Alert Settings</h2>
+    </div>
   </div>
+</div>
 
-<!-- TODO: Refactor model.py to store user's settings -->
-  <form id="earthquake-form" action="/settings/eqmag" method="POST">
-    <select name="magnitude">
-        <option value="4.5">4.5 or higher</option>
-        <option value="2.5">2.5 or higher</option>
-    </select>
-    <br><br>
-    <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
-    <input type="submit" value="Submit">
-  </form><br><br>
 
-  <div id="map"></div>
+<div class="g-hor-divider__solid--sky-light">
+  <div class="container g-padding-y-80--xs g-padding-y-125--sm">
+    <div class="row g-margin-b-60--xs g-margin-b-70--md">
+      <div class="g-text-center--xs g-margin-b-80--xs">
+        <p class="text-uppercase g-font-size-14--xs g-font-weight--700 g-color--primary g-letter-spacing--2 g-margin-b-25--xs"></p>
+        <h2 class="g-font-size-32--xs g-font-size-36--md">Magnitude level:</h2>
+      </div>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
-</script>
-<script src="/static/js/maps.js"></script>
+      <div class="container g-padding-y-80--xs g-padding-y-125--xsm">
+        <div class="g-text-center--xs">
+          <form id="earthquake-form" action="/settings/eqmag" method="POST">
+            <select class="form-control s-form-v4__input g-padding-l-0--xs" name="magnitude">
+              <option value="4.5">4.5 or higher</option>
+              <option value="2.5">2.5 or higher</option>
+            </select>
+            <br><br>
+            <input type="hidden" class="setting-code" name="setting_code" value="eqmag">
+            <input class="text-uppercase s-btn s-btn--xs s-btn--primary-bg g-radius--50 g-padding-x-70--xs g-margin-b-20--xs" type="submit" value="Submit">
+          </form>
+        </div>
+      </div>
+
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
 
 {% endblock %}

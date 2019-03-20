@@ -19,7 +19,17 @@ function initMap() {
       };
       // Send user's location into server alert route
       $.get('/locations', pos, (results) => {
-        console.log(typeof(pos));
+        $('#success-location').append(`
+                                        <br><br>
+                                        <div class="g-container--sm g-padding-y-80--xs g-padding-y-125--xsm">
+                                            <div class="g-text-center--xs g-margin-b-60--xs">
+                                            <img alt="" src="/static/img/widgets/gmap/cd-icon-location.svg" draggable="false">
+                                                <h2 class="g-font-size-32--xs g-font-size-36--md g-color--white">Location Found</h2>
+                                                <a href="https://www.google.com/maps/place/${pos.lat},${pos.lng}" style="background:rgba(255,255,255, 0.9);"><b>Click here to see your current location!</b></a>
+                                            </div>
+                                        </div>
+                                     `
+                                     );
       });
 
       infoWindow.setPosition(pos);

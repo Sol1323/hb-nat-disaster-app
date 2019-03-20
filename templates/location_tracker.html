@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+
+<li class="dropdown s-header-v2__nav-item s-header-v2__dropdown-on-hover">
+    <a href="javascript:void(0);" class="dropdown-toggle s-header-v2__nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="g-font-size-10--xs g-margin-l-5--xs ti-angle-down"></span></a>
+    <ul class="dropdown-menu s-header-v2__dropdown-menu">
+          <li><a href="/users/{{ user.user_id }}" class="s-header-v2__dropdown-menu-link">Profile</a></li>
+        <li><a href="#contacts-link" class="s-header-v2__dropdown-menu-link">Contacs</a></li>
+        <li><a href="#settings-link" class="s-header-v2__dropdown-menu-link">Settings</a></li>
+    </ul>
+</li>
+<!-- End Pages -->
+<li class="s-header-v2__nav-item"><a href="/locations" class="s-header-v2__nav-link s-header-v2__nav-link--dark">Location Tracker</a></li>
+{% endblock navbar %}
+
+
+{% block content %}
+
+  <div id="success-location" class="s-promo-block-v7 g-bg-position--center g-bg-color--dark-light" style="background: url('img/1920x1080/05.jpg') no-repeat;"></div>
+
+  <div class="g-bg-color--primary-to-blueviolet-ltr">
+    <div class="g-text-center--xs">
+      <button type="submit" class="text-uppercase s-btn s-btn--md s-btn--white-brd g-radius--50 g-padding-x-70--xs g-margin-b-20--xs"><a href="/users/{{ user.user_id }}" style="color:white;"> Go Back to Profile</a></button>
+    </div>
+  </div>
+
+
+
+  <div id="map" style="position:unset;"></div>
+
+  <!-- scripts for google map -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_KEY }}&callback=initMap">
+  </script>
+  <script src="/static/js/maps.js"></script>
+{% endblock %}

@@ -7,11 +7,6 @@ import googlemaps
 from geopy import distance
 from quake import *
 
-# from twilio.twiml.messaging_response import MessagingResponse, Message
-# from twilio.rest import Client
-# from twilio.base.exceptions import TwilioRestException
-# import urllib
-
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
@@ -26,16 +21,6 @@ app.secret_key = os.environ.get('APP_SECRET_KEY')
 #Get google maps secret key
 GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 
-#Get twilio account sid, auth token, phone number for sms and test phones
-# TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-# TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-# TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
-# TWILIO_TEST_TOKEN = os.environ.get('TWILIO_TEST_TOKEN')
-# TWILIO_TEST_SID = os.environ.get('TWILIO_TEST_SID')
-# TEST_PHONE = os.environ.get('TEST_PHONE')
-#
-# # Account SID and Auth Token for twilio
-# client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 #Define google maps client
 gmaps = googlemaps.Client(GOOGLE_KEY)
@@ -64,9 +49,7 @@ def signup():
 
     if request.method == 'GET':
 
-        user = None
-
-        return render_template('signup_form.html', user=user)
+        return render_template('signup_form.html')
 
     elif request.method == 'POST':
     # Get form variables
@@ -325,7 +308,7 @@ def create_test():
     body = user.create_test_message()
 
     send_sms(phone, user, body)
-
+#
     flash(f"Message sent to your phone.")
 
     return redirect(f'/users/{user_id}')
@@ -335,10 +318,10 @@ def create_test():
 if __name__ == '__main__':
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    schedule.every(30).seconds.do(get_new_earthquake, level="2.5", period="hour")
-    app.debug = True
+    schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
+    # app.debug = True
     connect_to_db(app)
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
     schedule.run_continuously(1)
     app.run(host='0.0.0.0')

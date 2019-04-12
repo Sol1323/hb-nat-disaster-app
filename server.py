@@ -26,19 +26,12 @@ GOOGLE_KEY = os.environ.get('GOOGLE_KEY')
 gmaps = googlemaps.Client(GOOGLE_KEY)
 
 
-# FIXME: Fix this to raise an error.
-# Normally, if you use an undefined variable in Jinja2, it fails silently.
 app.jinja_env.undefined = StrictUndefined
 
 
 @app.route('/')
 def index():
     """Homepage."""
-
-    # if session:
-    #     user_id = session['user_id']
-    #     user = User.query.get(user_id)
-
 
     return render_template('index.html')
 
@@ -217,8 +210,7 @@ def contact_profile(contact_id):
 
         contact = Contact.query.get(contact_id)
         contact.name = name
-        #FIXME: we should be modifying same phone in the idx of the list of phones
-        #Maybe adding idx or converting phones to dictionary
+
         contact.phones[-1] = phone
 
         db.session.add(contact)
@@ -237,9 +229,10 @@ def earthquake_list():
     if session:
         user_id = session['user_id']
         user = User.query.get(user_id)
-    #Get all earthquakes in the past hour
+
     feeds = get_all_earthquakes("all", "hour")
     earthquakes = Earthquake.query.all()
+
     return render_template('earthquake_list.html', earthquakes=earthquakes, feeds=feeds, user=user)
 
 
@@ -256,15 +249,10 @@ def earthquake_detail(nat_id):
 def update_setting(setting_code):
     """Add a contact into the database."""
 
-    #TODO: Finish this route.
-    #Get form variables
-    magnitude = request.form.get("magnitude")
-    # setting = Setting.query.get("eqmag")
-    # eq_mag_setting = Setting("eqmag", "Earthquake magnitude alert level")
+    magnitude = request.form.get('magnitude')
 
     user_id = session['user_id']
 
-    # eq_mag_setting = Setting(setting_code, "Earthquake magnitude alert level")
     new_setting = UserSetting(user_value=magnitude, user_id=user_id, setting_code=setting_code)
 
     db.session.add(new_setting)
@@ -308,7 +296,7 @@ def create_test():
     body = user.create_test_message()
 
     send_sms(phone, user, body)
-#
+
     flash(f"Message sent to your phone.")
 
     return redirect(f'/users/{user_id}')
@@ -316,8 +304,7 @@ def create_test():
 
 
 if __name__ == '__main__':
-    # We have to set debug=True here, since it has to be True at the point
-    # that we invoke the DebugToolbarExtension
+
     schedule.every(1).seconds.do(get_new_earthquake, level="all", period="hour")
     # app.debug = True
     connect_to_db(app)
